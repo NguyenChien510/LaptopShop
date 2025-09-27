@@ -2,13 +2,23 @@ import { useState, useEffect, useContext } from "react";
 import axios from "@/lib/axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShoppingCart, Search, User } from "lucide-react";
+import {
+  ShoppingCart,
+  Search,
+  User,
+  LogIn,
+  UserPlus,
+  ShoppingBag,
+  LogOut,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { UserContext } from "@/context/UserContext";
+import { useRef } from "react";
 
 const Header = () => {
   const { user, setUser } = useContext(UserContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
@@ -21,13 +31,11 @@ const Header = () => {
       console.error(err);
     }
   };
-
   // Kiểm tra trạng thái login khi component mount
   useEffect(() => {
     const checkLogin = async () => {
       try {
         const res = await axios.get("/auth/check");
-        console.log("📥 Toàn bộ res.data:", res.data);
         if (res.data.loggedIn) {
           setUser(res.data.user);
         } else {
@@ -38,25 +46,34 @@ const Header = () => {
         console.error(err);
       }
     };
-
     checkLogin();
   }, [setUser]);
 
-  // Đóng dropdown khi user thay đổi (login/logout)
   useEffect(() => {
-    if (dropdownOpen) setDropdownOpen(false);
-  }, [user]);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b">
       <div className="container flex items-center justify-between py-4 gap-6">
         {/* Logo */}
-        <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
-          <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">T</span>
+        <Link to="/">
+          <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
+            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">T</span>
+            </div>
+            <span className="text-xl font-bold text-foreground">TechStore</span>
           </div>
-          <span className="text-xl font-bold text-foreground">TechStore</span>
-        </div>
+        </Link>
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
@@ -92,7 +109,7 @@ const Header = () => {
           </Button>
 
           {/* User Icon + Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <Button
               variant="ghost"
               size="icon"
@@ -103,41 +120,46 @@ const Header = () => {
             </Button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden animate-fadeIn">
                 {!user ? (
                   <>
                     <Link
                       to="/login"
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition-all duration-200 group"
                     >
-                      Đăng nhập
+                      <LogIn className="w-4 h-4 text-gray-500 group-hover:text-blue-500 transition-colors" />
+                      <span>Đăng nhập</span>
                     </Link>
                     <Link
                       to="/signup"
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition-all duration-200 group"
                     >
-                      Đăng ký
+                      <UserPlus className="w-4 h-4 text-gray-500 group-hover:text-green-500 transition-colors" />
+                      <span>Đăng ký</span>
                     </Link>
                   </>
                 ) : (
                   <>
                     <Link
                       to="/profile"
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition-all duration-200 group"
                     >
-                      Thông tin cá nhân
+                      <User className="w-4 h-4 text-gray-500 group-hover:text-indigo-500 transition-colors" />
+                      <span>Thông tin cá nhân</span>
                     </Link>
                     <Link
                       to="/orders"
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition-all duration-200 group"
                     >
-                      Lịch sử đơn hàng
+                      <ShoppingBag className="w-4 h-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
+                      <span>Lịch sử đơn hàng</span>
                     </Link>
                     <button
-                      className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 transition-all duration-200 group cursor-pointer"
                       onClick={handleLogout}
                     >
-                      Đăng xuất
+                      <LogOut className="w-4 h-4 text-gray-500 group-hover:text-red-500 transition-colors" />
+                      <span>Đăng xuất</span>
                     </button>
                   </>
                 )}
