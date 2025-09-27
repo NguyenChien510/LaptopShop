@@ -1,12 +1,7 @@
-import {
-  Facebook,
-  Youtube,
-  Instagram,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Mail, Phone, MapPin } from "lucide-react";
+import youtube from "@/assets/youtube.png";
+import fb from "@/assets/fb.png";
+import ins from "@/assets/instagram.png";
 
 const Footer = () => {
   return (
@@ -16,10 +11,10 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">T</span>
+                <span className="text-white font-bold text-lg">L</span>
               </div>
               <span className="text-xl font-bold text-foreground">
-                TechStore
+                LaptopStore
               </span>
             </div>
             <p className="text-muted-foreground mb-4">
@@ -27,15 +22,21 @@ const Footer = () => {
               nhất thị trường.
             </p>
             <div className="flex gap-2">
-              <Button variant="outline" size="icon">
-                <Facebook className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Youtube className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Instagram className="h-4 w-4" />
-              </Button>
+              <img
+                src={fb}
+                alt=""
+                className="object-cover w-10 h-10 cursor-pointer"
+              />
+              <img
+                src={youtube}
+                alt=""
+                className="object-cover w-10 h-10 cursor-pointer"
+              />
+              <img
+                src={ins}
+                alt=""
+                className="object-cover w-10 h-10 cursor-pointer"
+              />
             </div>
           </div>
 
@@ -56,17 +57,7 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  PC Gaming
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  PC Đồ họa
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Phụ kiện
+                  Laptop Đồ họa
                 </a>
               </li>
             </ul>
@@ -120,7 +111,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>info@techstore.vn</span>
+                <span>info@LaptopStore.vn</span>
               </div>
             </div>
           </div>
@@ -130,7 +121,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground">
-            © 2025 TechStore. Tất cả quyền được bảo lưu.
+            © 2025 LaptopStore. Tất cả quyền được bảo lưu.
           </p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <a

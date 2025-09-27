@@ -69,28 +69,27 @@ const Header = () => {
         <Link to="/">
           <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer">
             <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">T</span>
+              <span className="text-white font-bold text-lg">L</span>
             </div>
-            <span className="text-xl font-bold text-foreground">TechStore</span>
+            <span className="text-xl font-bold text-foreground">
+              LaptopStore
+            </span>
           </div>
         </Link>
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           <a href="#" className="hover:text-primary">
-            Sản phẩm
-          </a>
-          <a href="#" className="hover:text-primary">
             Laptop
           </a>
           <a href="#" className="hover:text-primary">
-            Máy tính
+            Laptop văn phòng
           </a>
           <a href="#" className="hover:text-primary">
-            Linh kiện
+            Laptop gaming
           </a>
           <a href="#" className="hover:text-primary">
-            Xây dựng cấu hình
+            Laptop đồ họa
           </a>
         </nav>
 

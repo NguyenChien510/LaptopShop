@@ -44,7 +44,7 @@ const ProductGrid = () => {
             className="text-muted-foreground text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in"
             style={{ animationDelay: "0.2s" }}
           >
-            🚀 Khám phá bộ sưu tập máy tính và laptop chất lượng cao với
+            🚀 Khám phá bộ sưu tập laptop chất lượng cao với
             <span className="text-primary font-semibold">
               công nghệ tiên tiến nhất
             </span>

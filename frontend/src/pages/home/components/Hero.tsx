@@ -55,8 +55,8 @@ const Hero = ({ onExplore }: HeroProps) => {
               className="text-xl text-blue-100 leading-relaxed animate-fade-in max-w-lg"
               style={{ animationDelay: "0.2s" }}
             >
-              Khám phá thế giới công nghệ với những sản phẩm laptop, PC gaming
-              và phụ kiện hiện đại nhất. Chất lượng cao - Giá cả hợp lý.
+              Khám phá thế giới công nghệ với những sản phẩm laptop Chất lượng
+              cao - Giá cả hợp lý.
             </p>
 
             {/* Feature Icons */}

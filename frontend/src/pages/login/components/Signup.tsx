@@ -70,10 +70,10 @@ export default function Signup({
               {/* Logo + Brand */}
               <div className="flex justify-center items-center gap-2 flex-shrink-0 cursor-pointer">
                 <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">T</span>
+                  <span className="text-white font-bold text-lg">L</span>
                 </div>
                 <span className="text-xl font-bold text-foreground">
-                  TechStore
+                  LaptopStore
                 </span>
               </div>
 

@@ -4,6 +4,7 @@ import ProductGrid from "@/pages/home/components/ProductGrid";
 import Features from "@/pages/home/components/Features";
 import Footer from "@/components/layouts/Footer";
 import { useRef } from "react";
+import UsageFilter from "./components/UsageFilter";
 
 const Index = () => {
   const productRef = useRef<HTMLDivElement | null>(null);
@@ -16,8 +17,9 @@ const Index = () => {
       <Header />
       <Hero onExplore={handleExplore} />
       <div ref={productRef}>
-        <ProductGrid />
+        <UsageFilter />
       </div>
+      <ProductGrid />
       <Features />
       <Footer />
     </div>
