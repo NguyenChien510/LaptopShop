@@ -3,12 +3,19 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
-import { connectDB, sequelize } from "./config/db.js";
+import { connectDB } from "./config/db.js";
 import userRoutes from "./routes/UserRoute.js";
 import authRoutes from "./routes/AuthRoute.js";
+import productRoutes from "./routes/ProductRoute.js";
+import uploadRoutes from "./routes/UploadRoute.js";
+import brandRoutes from "./routes/BrandRoute.js";
+import usagesRoutes from "./routes/UsageRoute.js";
 import passport from "./config/passport.js";
 import session from "express-session";
 import { authMiddleware } from "./middleware/authMiddleware.js";
+import "./models/Associations.js";
+
+import { seed } from "./seed.js";
 
 const PORT = process.env.PORT || 5001;
 
@@ -39,10 +46,14 @@ app.get("/", (req, res) => {
 app.use(authMiddleware);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/uploads", uploadRoutes);
+app.use("/api/brands", brandRoutes);
+app.use("/api/usages", usagesRoutes);
 
 // Connect to DB and start server
 connectDB().then(async () => {
-  await sequelize.sync({ alter: false }); // tạo bảng nếu chưa có
+  // await seed();
   app.listen(PORT, () => {
     console.log(`Server bắt đầu ở cổng ${PORT}`);
   });

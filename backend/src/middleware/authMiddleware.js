@@ -12,8 +12,15 @@ export const authMiddleware = async (req, res, next) => {
     "/api/auth/verify-otp",
     "/api/auth/reset-password",
     "/api/auth/check",
+    "/api/uploads",
   ];
-  if (publicPaths.includes(req.path)) return next();
+  if (
+    publicPaths.includes(req.path) ||
+    req.path.startsWith("/api/brands") ||
+    req.path.startsWith("/api/usages") ||
+    req.path.startsWith("/api/products")
+  )
+    return next();
   try {
     // const authHeader = req.headers["authorization"];
     // if (!authHeader || !authHeader.startsWith("Bearer ")) {
