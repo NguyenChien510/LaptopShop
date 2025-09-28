@@ -23,7 +23,7 @@ import gamingLaptop from "@/assets/laptop-gaming.jpg";
 const LaptopCategories = () => {
   const categories = [
     {
-      id: "office",
+      id: 0,
       title: "HỌC TẬP, VĂN PHÒNG",
       description: "Laptop phù hợp cho học tập và công việc văn phòng",
       images: [word, excel, ppt],
@@ -31,7 +31,7 @@ const LaptopCategories = () => {
       color: "from-blue-500 to-blue-600",
     },
     {
-      id: "design",
+      id: 1,
       title: "ĐỒ HỌA, KỸ THUẬT",
       description: "Laptop cao cấp cho thiết kế và kỹ thuật chuyên nghiệp",
       images: [ps, ai, autocad],
@@ -39,7 +39,7 @@ const LaptopCategories = () => {
       color: "from-purple-500 to-pink-500",
     },
     {
-      id: "programming",
+      id: 2,
       title: "LẬP TRÌNH",
       description: "Laptop mạnh mẽ cho lập trình và phát triển phần mềm",
       images: [vsc, vs, nb],
@@ -47,8 +47,8 @@ const LaptopCategories = () => {
       color: "from-green-500 to-emerald-500",
     },
     {
-      id: "gaming",
-      title: "GAME",
+      id: 3,
+      title: "GAMING",
       description:
         "Laptop gaming hiệu năng cao cho trải nghiệm chơi game tốt nhất",
       images: [lol, fo4, gta],

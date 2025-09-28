@@ -6,8 +6,10 @@ import Home from "./pages/home/index";
 import Login from "./pages/login/index";
 import Signup from "./pages/login/components/Signup";
 import NotFound from "./pages/NotFound";
+import Test from "./pages/testupload";
 import ForgotPassword from "./components/ForgotPassword";
 import { UserProvider } from "./context/UserContext";
+import AddProduct from "./pages/admin/AddProduct";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +24,8 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/reset" element={<ForgotPassword />} />
+            <Route path="/addproduct" element={<AddProduct />} />
+            <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
