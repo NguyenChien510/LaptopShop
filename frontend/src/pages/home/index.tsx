@@ -1,8 +1,8 @@
 import Header from "@/components/layouts/Header";
+import Footer from "@/components/layouts/Footer";
 import Hero from "@/pages/home/components/Hero";
 import ProductGrid from "@/pages/home/components/ProductGrid";
 import Features from "@/pages/home/components/Features";
-import Footer from "@/components/layouts/Footer";
 import { useRef } from "react";
 import UsageFilter from "./components/UsageFilter";
 

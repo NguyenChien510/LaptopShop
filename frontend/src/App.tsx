@@ -10,6 +10,7 @@ import Test from "./pages/testupload";
 import ForgotPassword from "./components/ForgotPassword";
 import { UserProvider } from "./context/UserContext";
 import AddProduct from "./pages/admin/AddProduct";
+import ProductClient from "./pages/ProductClient";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/signup" element={<Signup />} />
             <Route path="/reset" element={<ForgotPassword />} />
             <Route path="/addproduct" element={<AddProduct />} />
+            <Route path="/allproducts" element={<ProductClient />} />
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

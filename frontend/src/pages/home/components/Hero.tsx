@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star, Zap, Shield, Headphones } from "lucide-react";
 import heroImage from "@/assets/hero-tech-modern.jpg";
+import { Link } from "react-router-dom";
 
 interface HeroProps {
   onExplore: () => void;
@@ -91,11 +92,12 @@ const Hero = ({ onExplore }: HeroProps) => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button
+                asChild
                 size="lg"
                 variant="outline"
-                className="border-white/30 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm text-lg px-8 py-6 cursor-pointer"
+                className="border-white/30 text-white bg-white/10 hover:bg-white/20 backdrop-blur-sm text-lg px-8 py-6"
               >
-                Xem sản phẩm
+                <Link to="/allproducts">Xem sản phẩm</Link>
               </Button>
             </div>
           </div>

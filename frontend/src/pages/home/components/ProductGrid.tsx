@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import ProductCard from "../../../components/ProductCard";
 import { products } from "@/types/products";
+import { Link } from "react-router";
 
 const ProductGrid = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -86,7 +87,7 @@ const ProductGrid = () => {
 
         <div className="text-center mt-12">
           <Button size="lg" variant="outline" className="cursor-pointer">
-            Xem thêm sản phẩm
+            <Link to="/allproducts">Xem thêm sản phẩm</Link>
           </Button>
         </div>
       </div>
