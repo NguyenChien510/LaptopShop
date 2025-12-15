@@ -1,6 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ProductCard from "../components/ProductCard";
+
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
@@ -11,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -26,6 +29,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import type { Product } from "@/types/product";
+import axios from "@/lib/axios";
 
 const brands = ["Lenovo", "Dell", "Asus", "HP", "Apple", "MSI", "Acer"];
 const cpuOptions = [
@@ -45,6 +50,9 @@ const displayOptions = ["13 inch", "14 inch", "15 inch", "16 inch"];
 const ssdOptions = ["256GB", "512GB", "1TB"];
 
 const AllProducts = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [priceRange, setPriceRange] = useState([0, 50000000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
@@ -52,20 +60,90 @@ const AllProducts = () => {
   const [selectedRAM, setSelectedRAM] = useState<string[]>([]);
   const [selectedDisplay, setSelectedDisplay] = useState<string[]>([]);
   const [selectedSSD, setSelectedSSD] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("name");
+  const [sortBy, setSortBy] = useState("price-asc");
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(true);
 
   const itemsPerPage = 12;
   const maxPrice = 100000000;
 
-  // Dummy products (sau này thay API vào đây)
-  const products: any[] = [];
+  // Fetch products từ API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axios.get("/products"); // 👉 đổi URL API thật vào đây
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Lỗi fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  // Filtering logic (tạm để trống, sau này nối API sẽ apply filter ở đây)
+  // Lọc & sắp xếp
   const filteredProducts = useMemo(() => {
-    return products;
+    let result = [...products];
+
+    // Search
+    if (searchTerm) {
+      result = result.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Price range
+    result = result.filter(
+      (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
+    );
+
+    // Brand filter
+    if (selectedBrands.length > 0) {
+      result = result.filter((p) =>
+        selectedBrands.includes(
+          p.shortSpecs.find((s) => s.id === "brand")?.value || ""
+        )
+      );
+    }
+
+    // CPU filter
+    if (selectedCPU.length > 0) {
+      result = result.filter((p) =>
+        selectedCPU.includes(
+          p.shortSpecs.find((s) => s.id === "cpu")?.value || ""
+        )
+      );
+    }
+
+    // RAM filter
+    if (selectedRAM.length > 0) {
+      result = result.filter((p) =>
+        selectedRAM.includes(
+          p.shortSpecs.find((s) => s.id === "ram")?.value || ""
+        )
+      );
+    }
+
+    // SSD filter
+    if (selectedSSD.length > 0) {
+      result = result.filter((p) =>
+        selectedSSD.includes(
+          p.shortSpecs.find((s) => s.id === "ssd")?.value || ""
+        )
+      );
+    }
+
+    // Sort
+    if (sortBy === "price-asc") {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortBy === "price-desc") {
+      result.sort((a, b) => b.price - a.price);
+    }
+
+    return result;
   }, [
+    products,
     searchTerm,
     priceRange,
     selectedBrands,
@@ -126,15 +204,6 @@ const AllProducts = () => {
         </div>
 
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 cursor-pointer"
-          >
-            <Filter className="h-4 w-4" />
-            Bộ lọc
-          </Button>
-
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-52">
               <SelectValue placeholder="Sắp xếp" />
@@ -151,220 +220,141 @@ const AllProducts = () => {
         {/* Sidebar Filters */}
         {showFilters && (
           <Card className="w-60">
-            <CardContent>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">Bộ lọc</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="cursor-pointer"
-                >
-                  Xóa tất cả
-                </Button>
-              </div>
-
-              {/* Price (luôn hiển thị) */}
-              <div className="mb-6 p-3 rounded-lg bg-muted/50">
-                <h4 className="font-medium mb-3">Khoảng giá</h4>
+            <CardContent className="space-y-4">
+              {/* Price Range */}
+              <div className="mt-4">
+                <div className="text-sm font-semibold mb-2">Khoảng giá</div>
                 <Slider
                   value={priceRange}
-                  onValueChange={(value) => setPriceRange(value)}
+                  onValueChange={setPriceRange}
                   max={maxPrice}
                   step={1000000}
-                  className="mb-2"
+                  className="w-full"
                 />
-                <div className="flex justify-between text-sm text-muted-foreground">
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>{formatPrice(priceRange[0])}</span>
                   <span>{formatPrice(priceRange[1])}</span>
                 </div>
               </div>
-
-              {/* Accordion cho các bộ lọc khác */}
-              <Accordion type="multiple" className="space-y-3">
-                {/* Brand */}
-                <AccordionItem
-                  value="brand"
-                  className="rounded-lg bg-muted/50 px-3"
-                >
-                  <AccordionTrigger className="font-medium cursor-pointer">
-                    Thương hiệu
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 mt-2">
-                      {brands.map((brand) => (
-                        <div
-                          key={brand}
-                          className="flex items-center space-x-2"
-                        >
-                          <Checkbox
-                            id={`brand-${brand}`}
-                            checked={selectedBrands.includes(brand)}
-                            onCheckedChange={(checked) =>
-                              setSelectedBrands(
-                                checked
-                                  ? [...selectedBrands, brand]
-                                  : selectedBrands.filter((b) => b !== brand)
-                              )
-                            }
-                            className="cursor-pointer"
-                          />
-                          <label
-                            htmlFor={`brand-${brand}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {brand}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+              {/* Brand Filter */}
+              <Accordion type="multiple" defaultValue={brands}>
+                <AccordionItem value="brand">
+                  <AccordionTrigger>Thương hiệu</AccordionTrigger>
+                  <AccordionContent className="space-y-1 mt-2">
+                    {brands.map((brand) => (
+                      <div key={brand} className="flex items-center gap-2">
+                        <Checkbox
+                          checked={selectedBrands.includes(brand)}
+                          onCheckedChange={(checked) => {
+                            setSelectedBrands((prev) =>
+                              checked
+                                ? [...prev, brand]
+                                : prev.filter((b) => b !== brand)
+                            );
+                          }}
+                        />
+                        <span className="text-sm">{brand}</span>
+                      </div>
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* CPU */}
-                <AccordionItem
-                  value="cpu"
-                  className="rounded-lg bg-muted/50 px-3"
-                >
-                  <AccordionTrigger className="font-medium cursor-pointer">
-                    CPU
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 mt-2">
-                      {cpuOptions.map((cpu) => (
-                        <div key={cpu} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`cpu-${cpu}`}
-                            checked={selectedCPU.includes(cpu)}
-                            onCheckedChange={(checked) =>
-                              setSelectedCPU(
-                                checked
-                                  ? [...selectedCPU, cpu]
-                                  : selectedCPU.filter((c) => c !== cpu)
-                              )
-                            }
-                            className="cursor-pointer"
-                          />
-                          <label
-                            htmlFor={`cpu-${cpu}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {cpu}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                {/* CPU Filter */}
+                <AccordionItem value="cpu">
+                  <AccordionTrigger>CPU</AccordionTrigger>
+                  <AccordionContent className="space-y-1 mt-2">
+                    {cpuOptions.map((cpu) => (
+                      <div key={cpu} className="flex items-center gap-2">
+                        <Checkbox
+                          checked={selectedCPU.includes(cpu)}
+                          onCheckedChange={(checked) => {
+                            setSelectedCPU((prev) =>
+                              checked
+                                ? [...prev, cpu]
+                                : prev.filter((c) => c !== cpu)
+                            );
+                          }}
+                        />
+                        <span className="text-sm">{cpu}</span>
+                      </div>
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* RAM */}
-                <AccordionItem
-                  value="ram"
-                  className="rounded-lg bg-muted/50 px-3"
-                >
-                  <AccordionTrigger className="font-medium cursor-pointer">
-                    RAM
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 mt-2">
-                      {ramOptions.map((ram) => (
-                        <div key={ram} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`ram-${ram}`}
-                            checked={selectedRAM.includes(ram)}
-                            onCheckedChange={(checked) =>
-                              setSelectedRAM(
-                                checked
-                                  ? [...selectedRAM, ram]
-                                  : selectedRAM.filter((r) => r !== ram)
-                              )
-                            }
-                            className="cursor-pointer"
-                          />
-                          <label
-                            htmlFor={`ram-${ram}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {ram}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                {/* RAM Filter */}
+                <AccordionItem value="ram">
+                  <AccordionTrigger>RAM</AccordionTrigger>
+                  <AccordionContent className="space-y-1 mt-2">
+                    {ramOptions.map((ram) => (
+                      <div key={ram} className="flex items-center gap-2">
+                        <Checkbox
+                          checked={selectedRAM.includes(ram)}
+                          onCheckedChange={(checked) => {
+                            setSelectedRAM((prev) =>
+                              checked
+                                ? [...prev, ram]
+                                : prev.filter((r) => r !== ram)
+                            );
+                          }}
+                        />
+                        <span className="text-sm">{ram}</span>
+                      </div>
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* Display */}
-                <AccordionItem
-                  value="display"
-                  className="rounded-lg bg-muted/50 px-3"
-                >
-                  <AccordionTrigger className="font-medium cursor-pointer">
-                    Màn hình
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 mt-2">
-                      {displayOptions.map((size) => (
-                        <div key={size} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`display-${size}`}
-                            checked={selectedDisplay.includes(size)}
-                            onCheckedChange={(checked) =>
-                              setSelectedDisplay(
-                                checked
-                                  ? [...selectedDisplay, size]
-                                  : selectedDisplay.filter((s) => s !== size)
-                              )
-                            }
-                            className="cursor-pointer"
-                          />
-                          <label
-                            htmlFor={`display-${size}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {size}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                {/* Display Filter */}
+                <AccordionItem value="display">
+                  <AccordionTrigger>Màn hình</AccordionTrigger>
+                  <AccordionContent className="space-y-1 mt-2">
+                    {displayOptions.map((disp) => (
+                      <div key={disp} className="flex items-center gap-2">
+                        <Checkbox
+                          checked={selectedDisplay.includes(disp)}
+                          onCheckedChange={(checked) => {
+                            setSelectedDisplay((prev) =>
+                              checked
+                                ? [...prev, disp]
+                                : prev.filter((d) => d !== disp)
+                            );
+                          }}
+                        />
+                        <span className="text-sm">{disp}</span>
+                      </div>
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* SSD */}
-                <AccordionItem
-                  value="ssd"
-                  className="rounded-lg bg-muted/50 px-3"
-                >
-                  <AccordionTrigger className="font-medium cursor-pointer">
-                    Ổ cứng SSD
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 mt-2">
-                      {ssdOptions.map((ssd) => (
-                        <div key={ssd} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`ssd-${ssd}`}
-                            checked={selectedSSD.includes(ssd)}
-                            onCheckedChange={(checked) =>
-                              setSelectedSSD(
-                                checked
-                                  ? [...selectedSSD, ssd]
-                                  : selectedSSD.filter((s) => s !== ssd)
-                              )
-                            }
-                            className="cursor-pointer"
-                          />
-                          <label
-                            htmlFor={`ssd-${ssd}`}
-                            className="text-sm cursor-pointer"
-                          >
-                            {ssd}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                {/* SSD Filter */}
+                <AccordionItem value="ssd">
+                  <AccordionTrigger>SSD</AccordionTrigger>
+                  <AccordionContent className="space-y-1 mt-2">
+                    {ssdOptions.map((ssd) => (
+                      <div key={ssd} className="flex items-center gap-2">
+                        <Checkbox
+                          checked={selectedSSD.includes(ssd)}
+                          onCheckedChange={(checked) => {
+                            setSelectedSSD((prev) =>
+                              checked
+                                ? [...prev, ssd]
+                                : prev.filter((s) => s !== ssd)
+                            );
+                          }}
+                        />
+                        <span className="text-sm">{ssd}</span>
+                      </div>
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
+              {/* Clear Filters */}
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="w-full mt-4"
+              >
+                Xóa bộ lọc
+              </Button>
             </CardContent>
           </Card>
         )}
@@ -378,12 +368,24 @@ const AllProducts = () => {
             </p>
           </div>
 
-          {/* Placeholder Products */}
-          <div className="text-center py-12 border rounded-md">
-            <p className="text-muted-foreground text-lg">
-              Chưa có dữ liệu sản phẩm. Kết nối API để hiển thị.
-            </p>
-          </div>
+          {/* Products */}
+          {loading ? (
+            <div className="text-center py-12">Đang tải sản phẩm...</div>
+          ) : paginatedProducts.length === 0 ? (
+            <div className="text-center py-12 border rounded-md">
+              <p className="text-muted-foreground text-lg">
+                Không tìm thấy sản phẩm phù hợp.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {paginatedProducts.map((product) => (
+                <Link key={product.id} to={`/products/${product.id}`}>
+                  <ProductCard product={product} />
+                </Link>
+              ))}
+            </div>
+          )}
 
           {/* Pagination */}
           {totalPages > 1 && (

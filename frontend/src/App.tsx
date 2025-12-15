@@ -11,6 +11,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import { UserProvider } from "./context/UserContext";
 import AddProduct from "./pages/admin/AddProduct";
 import ProductClient from "./pages/ProductClient";
+import ProductDetailPage from "./components/ProductDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/reset" element={<ForgotPassword />} />
             <Route path="/addproduct" element={<AddProduct />} />
             <Route path="/allproducts" element={<ProductClient />} />
+            <Route path="/products/:id" element={<ProductDetailPage />} />
             <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

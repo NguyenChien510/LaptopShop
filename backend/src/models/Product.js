@@ -6,6 +6,8 @@ const Product = sequelize.define(
   {
     name: { type: DataTypes.STRING, allowNull: false },
     price: { type: DataTypes.FLOAT, allowNull: false },
+    brandId: { type: DataTypes.INTEGER, allowNull: true },
+    seriesId: { type: DataTypes.INTEGER, allowNull: true },
     stock: { type: DataTypes.INTEGER, defaultValue: 0 },
     sold: { type: DataTypes.INTEGER, defaultValue: 0 },
     sale: { type: DataTypes.INTEGER, defaultValue: 0 },

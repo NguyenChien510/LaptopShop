@@ -31,9 +31,9 @@ export const connectDB = async () => {
     await sequelize.authenticate();
     console.log("✅ Kết nối MySQL thành công");
     // Tạo bảng nếu chưa có
-    await sequelize.sync({ alter: true });
-    // { force: true } => xóa toàn bộ table rồi tạo lại
-    // { alter: true } => cập nhật schema, giữ data
+    await sequelize.sync();
+    // { force: true } // => xóa toàn bộ table rồi tạo lại
+    // { alter: true } // => cập nhật schema, giữ data
   } catch (error) {
     console.error("❌ Lỗi kết nối MySQL:", error);
     process.exit(1);

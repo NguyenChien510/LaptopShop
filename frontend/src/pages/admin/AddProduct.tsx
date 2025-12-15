@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import axios from "@/lib/axios";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { Loader2 } from "lucide-react";
-
 import {
   Select,
   SelectContent,
@@ -529,7 +528,12 @@ const AddProduct = () => {
                 id="image-upload"
               />
               <Label htmlFor="image-upload">
-                <Button type="button" variant="outline" asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  asChild
+                  className="cursor-pointer"
+                >
                   <span>Chọn ảnh</span>
                 </Button>
               </Label>
