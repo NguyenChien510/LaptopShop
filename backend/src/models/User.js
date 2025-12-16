@@ -7,9 +7,12 @@ const User = sequelize.define(
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
-    address: { type: DataTypes.STRING, allowNull: false },
     phone: { type: DataTypes.STRING, allowNull: false },
     image: { type: DataTypes.STRING, allowNull: true },
+    // Address info
+    city: { type: DataTypes.STRING, allowNull: true },
+    district: { type: DataTypes.STRING, allowNull: true },
+    street: { type: DataTypes.STRING, allowNull: true },
     refreshToken: {
       type: DataTypes.STRING,
       allowNull: true,

@@ -43,9 +43,12 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+// Public routes (không cần auth)
+app.use("/api/auth", authRoutes);
+
+// Protected routes (cần auth)
 app.use(authMiddleware);
 app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/brands", brandRoutes);

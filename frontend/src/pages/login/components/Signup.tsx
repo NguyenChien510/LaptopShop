@@ -19,7 +19,6 @@ export default function Signup({
     email: "",
     password: "",
     confirmPassword: "",
-    address: "",
     phone: "",
   });
   const [loading, setLoading] = useState(false);
@@ -41,7 +40,6 @@ export default function Signup({
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        address: formData.address,
         phone: formData.phone,
       });
 
@@ -126,19 +124,6 @@ export default function Signup({
                   placeholder="********"
                   required
                   value={formData.confirmPassword}
-                  onChange={handleChange}
-                />
-              </div>
-
-              {/* Address */}
-              <div className="grid gap-2">
-                <Label htmlFor="address">Address</Label>
-                <Input
-                  id="address"
-                  type="text"
-                  placeholder="Your address"
-                  required
-                  value={formData.address}
                   onChange={handleChange}
                 />
               </div>

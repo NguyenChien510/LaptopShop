@@ -20,9 +20,9 @@ const generateRefreshToken = (user) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, email, password, address, phone } = req.body;
+    const { name, email, password, phone } = req.body;
     // Simple validation
-    if (!name || !email || !password || !address || !phone) {
+    if (!name || !email || !password || !phone) {
       return res
         .status(400)
         .json({ success: false, message: "Please enter all fields" });
@@ -40,8 +40,10 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      address,
       phone,
+      city: "",
+      district: "",
+      street: "",
     });
     // Tạo token
     const accessToken = generateAccessToken(newUser);

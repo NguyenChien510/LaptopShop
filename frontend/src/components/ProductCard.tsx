@@ -10,12 +10,22 @@ import {
   Monitor,
 } from "lucide-react";
 import type { Product, ShortSpec } from "@/types/product";
+import { useContext } from "react";
+import { CartContext } from "@/context/CartContext";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const cartContext = useContext(CartContext);
+
+  if (!cartContext) {
+    throw new Error("ProductCard must be used within CartProvider");
+  }
+
+  const { addToCart } = cartContext;
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -40,45 +50,57 @@ const ProductCard = ({ product }: ProductCardProps) => {
     return specs.find((s) => s.id === id)?.value || "";
   };
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      thumbnail: product.thumbnail,
+    });
+    toast.success("Đã thêm vào giỏ hàng!");
+  };
+
   return (
     <Card className="group relative overflow-hidden border-0 transition-all duration-500 bg-gradient-card cursor-pointer h-full flex flex-col">
       {/* Gradient Border */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
 
-      {/* Image */}
-      <div className="relative overflow-hidden">
+      {/* Image - Fixed height for consistency */}
+      <div className="relative overflow-hidden h-48 sm:h-56 md:h-64 w-full">
         <img
           src={product.thumbnail}
           alt={product.name}
-          className="w-full object-cover transition-all duration-400 group-hover:scale-110"
+          className="w-full h-full object-cover transition-all duration-400 group-hover:scale-110"
         />
 
         {/* Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
         {/* Badge sale */}
-        <div className="absolute top-4 left-4 flex flex-col">
+        <div className="absolute top-3 left-3 flex flex-col">
           {discountPercentage && (
-            <Badge className="bg-gradient-to-r from-green-500 to-green-500 text-white border-0 shadow-lg font-bold text-sm px-3 py-1 rounded-md">
+            <Badge className="bg-gradient-to-r from-green-500 to-green-500 text-white border-0 shadow-lg font-bold text-xs px-2 py-1 rounded-md">
               -{discountPercentage}%
             </Badge>
           )}
         </div>
       </div>
 
-      <CardContent className="p-6 space-y-1 flex flex-col flex-grow">
+      <CardContent className="p-4 space-y-2 flex flex-col flex-grow">
         {/* Title + Rating */}
         <div>
-          <h3 className="font-bold text-xl line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
+          <h3 className="font-bold text-base line-clamp-2 min-h-[2rem] group-hover:text-primary transition-colors">
             {product.name}
           </h3>
 
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center gap-1.5 mb-2">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-4 w-4 transition-all ${
+                  className={`h-3.5 w-3.5 transition-all ${
                     i < Math.floor(rating)
                       ? "fill-yellow-400 text-yellow-400 scale-110"
                       : "text-gray-300"
@@ -86,65 +108,63 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 />
               ))}
             </div>
-            <span className="text-sm text-muted-foreground font-medium">
-              ({product.rateCount} đánh giá)
+            <span className="text-xs text-muted-foreground font-medium">
+              ({product.rateCount})
             </span>
           </div>
         </div>
 
         {/* Specs */}
-        <div className="bg-muted/30 rounded-lg p-3 space-y-1">
-          <div className="text-sm font-semibold text-foreground mb-1">
-            Cấu hình nổi bật:
+        <div className="bg-muted/30 rounded-lg p-2.5 space-y-1">
+          <div className="text-xs font-semibold text-foreground mb-1">
+            Cấu hình:
           </div>
           <div className="grid grid-cols-2 gap-1 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Cpu className="h-4 w-4 text-primary" />
-              {getSpec("cpu")}
+            <div className="flex items-center gap-1 truncate">
+              <Cpu className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+              <span className="truncate">{getSpec("cpu")}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <MemoryStick className="h-4 w-4 text-blue-500" />
-              {getSpec("ram")}
+            <div className="flex items-center gap-1 truncate">
+              <MemoryStick className="h-3.5 w-3.5 text-blue-500 flex-shrink-0" />
+              <span className="truncate">{getSpec("ram")}</span>
             </div>
-            <div className="flex items-center gap-1 col-span-2 sm:col-span-1">
-              <HardDrive className="h-4 w-4 text-purple-500" />
-              {getSpec("ssd")}
+            <div className="flex items-center gap-1 truncate">
+              <HardDrive className="h-3.5 w-3.5 text-purple-500 flex-shrink-0" />
+              <span className="truncate">{getSpec("ssd")}</span>
             </div>
             {getSpec("vga") && (
-              <div className="flex items-center gap-1 col-span-2 sm:col-span-1">
-                <Monitor className="h-4 w-4 text-green-500" />
-                {getSpec("vga")}
+              <div className="flex items-center gap-1 truncate">
+                <Monitor className="h-3.5 w-3.5 text-green-500 flex-shrink-0" />
+                <span className="truncate">{getSpec("vga")}</span>
               </div>
             )}
           </div>
         </div>
 
         {/* Price */}
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-2xl font-bold text-primary">
-              {formatPrice(product.price)}
-            </span>
-            {originalPrice && (
-              <div className="text-sm text-muted-foreground line-through">
-                {formatPrice(originalPrice)}
-              </div>
-            )}
-          </div>
+        <div className="pt-1">
+          <span className="text-xl font-bold text-primary">
+            {formatPrice(product.price)}
+          </span>
+          {originalPrice && (
+            <div className="text-xs text-muted-foreground line-through">
+              {formatPrice(originalPrice)}
+            </div>
+          )}
           {discountPercentage && (
-            <div className="text-right">
-              <div className="text-xs text-muted-foreground">Tiết kiệm</div>
-              <div className="text-sm font-bold text-green-600">
-                {formatPrice(originalPrice! - product.price)}
-              </div>
+            <div className="text-xs text-green-600 font-semibold">
+              Tiết kiệm: {formatPrice(originalPrice! - product.price)}
             </div>
           )}
         </div>
 
         {/* Add to Cart */}
-        <Button className="w-full h-12 mt-auto bg-gradient-primary text-white hover:shadow-glow transform hover:scale-105 transition-all duration-300 font-bold cursor-pointer">
-          <ShoppingCart className="h-5 w-5 mr-2" />
-          Thêm vào giỏ hàng
+        <Button
+          onClick={handleAddToCart}
+          className="w-full h-10 mt-auto bg-gradient-primary text-white hover:shadow-glow transform hover:scale-105 transition-all duration-300 font-bold cursor-pointer text-sm"
+        >
+          <ShoppingCart className="h-4 w-4 mr-1.5" />
+          Thêm vào giỏ
         </Button>
       </CardContent>
     </Card>

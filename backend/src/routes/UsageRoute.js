@@ -1,16 +1,27 @@
 import express from "express";
-import Usage from "../models/Usage.js";
+import {
+  getAllUsages,
+  getUsageById,
+  createUsage,
+  updateUsage,
+  deleteUsage,
+} from "../controllers/UsageController.js";
 
 const router = express.Router();
 
-// Lấy tất cả category (dùng cho mục đích sử dụng / usage)
-router.get("/", async (req, res) => {
-  try {
-    const usages = await Usage.findAll();
-    res.json(usages);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+// GET /api/usages - Lấy tất cả usages
+router.get("/", getAllUsages);
+
+// GET /api/usages/:id - Lấy usage theo ID
+router.get("/:id", getUsageById);
+
+// POST /api/usages - Tạo usage mới
+router.post("/", createUsage);
+
+// PUT /api/usages/:id - Cập nhật usage
+router.put("/:id", updateUsage);
+
+// DELETE /api/usages/:id - Xóa usage
+router.delete("/:id", deleteUsage);
 
 export default router;

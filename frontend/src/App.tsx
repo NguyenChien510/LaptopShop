@@ -9,9 +9,13 @@ import NotFound from "./pages/NotFound";
 import Test from "./pages/testupload";
 import ForgotPassword from "./components/ForgotPassword";
 import { UserProvider } from "./context/UserContext";
+import { CartProvider } from "./context/CartContext";
 import AddProduct from "./pages/admin/AddProduct";
 import ProductClient from "./pages/ProductClient";
 import ProductDetailPage from "./components/ProductDetailPage";
+import CartPage from "./pages/Cart";
+import CheckoutPage from "./pages/Checkout";
+import ProfilePage from "@/pages/profile";
 
 const queryClient = new QueryClient();
 
@@ -20,19 +24,25 @@ const App = () => (
     <TooltipProvider>
       <Toaster position="top-right" richColors />
       <UserProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/reset" element={<ForgotPassword />} />
-            <Route path="/addproduct" element={<AddProduct />} />
-            <Route path="/allproducts" element={<ProductClient />} />
-            <Route path="/products/:id" element={<ProductDetailPage />} />
-            <Route path="/test" element={<Test />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <CartProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/reset" element={<ForgotPassword />} />
+              <Route path="/addproduct" element={<AddProduct />} />
+              <Route path="/products" element={<ProductClient />} />
+              <Route path="/allproducts" element={<ProductClient />} />
+              <Route path="/products/:id" element={<ProductDetailPage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/test" element={<Test />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
       </UserProvider>
     </TooltipProvider>
   </QueryClientProvider>

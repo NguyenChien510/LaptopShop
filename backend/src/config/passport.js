@@ -20,8 +20,10 @@ passport.use(
             name: profile.displayName,
             email: profile.emails[0].value,
             password: "", // Google login thì ko cần
-            address: "",
             phone: "",
+            city: "",
+            district: "",
+            street: "",
             googleId: profile.id,
           });
         }
