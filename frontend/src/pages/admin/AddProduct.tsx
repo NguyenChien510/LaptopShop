@@ -307,6 +307,22 @@ const AddProduct = () => {
 
       const uploadedUrls: string[] = data.urls;
 
+      const brandId = parseInt(formData.brand);
+      const seriesId = parseInt(formData.series);
+
+      console.log("[ADD PRODUCT] brand:", formData.brand, "→", brandId);
+      console.log("[ADD PRODUCT] series:", formData.series, "→", seriesId);
+
+      // Validate IDs
+      if (isNaN(brandId) || brandId <= 0) {
+        toast.error("Vui lòng chọn thương hiệu hợp lệ");
+        return;
+      }
+      if (isNaN(seriesId) || seriesId <= 0) {
+        toast.error("Vui lòng chọn series hợp lệ");
+        return;
+      }
+
       const productData = {
         ...formData,
         price: parseFloat(formData.price),
@@ -316,10 +332,12 @@ const AddProduct = () => {
         images: uploadedUrls.slice(1),
         shortSpecs: shortSpecs.filter((s) => s.value),
         detailSpecs: detailSpecs.filter((d) => d.value),
-        brandId: parseInt(formData.brand) || null,
-        seriesId: parseInt(formData.series) || null,
+        brandId,
+        seriesId,
         usage: formData.usage, // gửi list id
       };
+
+      console.log("[ADD PRODUCT] Payload:", productData);
 
       await axios.post("/products/add", productData);
       toast.success("Sản phẩm đã được lưu thành công!");

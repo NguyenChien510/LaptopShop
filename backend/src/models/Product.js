@@ -18,7 +18,10 @@ const Product = sequelize.define(
     shortSpecs: { type: DataTypes.JSON, allowNull: false }, // cấu hình nổi bật (hiển thị card)
     detailSpecs: { type: DataTypes.JSON, allowNull: false }, // thông số chi tiết
   },
-  { timestamps: true }
+  {
+    tableName: "products",
+    timestamps: true,
+  }
 );
 
 export default Product;

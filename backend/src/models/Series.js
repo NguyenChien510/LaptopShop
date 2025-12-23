@@ -1,8 +1,15 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
 
-const Series = sequelize.define("Series", {
-  name: { type: DataTypes.STRING, allowNull: false },
-});
+const Series = sequelize.define(
+  "Series",
+  {
+    name: { type: DataTypes.STRING, allowNull: false },
+  },
+  {
+    tableName: "series",
+    timestamps: true,
+  }
+);
 
 export default Series;

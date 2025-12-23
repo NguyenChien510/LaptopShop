@@ -30,6 +30,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -42,6 +43,39 @@ app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
+});
+
+// Debug endpoint - kiểm tra series trong database
+app.get("/debug/series", async (req, res) => {
+  try {
+    const Series = (await import("./models/Series.js")).default;
+    const allSeries = await Series.findAll();
+    res.json({
+      total: allSeries.length,
+      series: allSeries.map((s) => ({ id: s.id, name: s.name })),
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Debug endpoint - test raw SQL insert
+app.post("/debug/test-insert", async (req, res) => {
+  try {
+    const { name, price, seriesId, brandId } = req.body;
+    const result = await sequelize.query(
+      `INSERT INTO Products (name, price, stock, sold, sale, rateCount, sumRate, thumbnail, images, shortSpecs, detailSpecs, brandId, seriesId, createdAt, updatedAt)
+       VALUES (?, ?, 0, 0, 0, 0, 0, 'test.jpg', '[]', '[]', '[]', ?, ?, NOW(), NOW())`,
+      {
+        replacements: [name, price, brandId || null, seriesId || null],
+        type: sequelize.QueryTypes.INSERT,
+      }
+    );
+    res.json({ success: true, message: "Raw SQL insert works", result });
+  } catch (err) {
+    console.log("[DEBUG TEST INSERT] Error:", err.message);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Public routes (không cần auth)
@@ -58,7 +92,6 @@ app.use("/api/orders", orderRoutes);
 
 // Connect to DB and start server
 connectDB().then(async () => {
-  // Sync models in dev to ensure new tables exist
   await sequelize.sync();
   // await seed();
   app.listen(PORT, () => {
