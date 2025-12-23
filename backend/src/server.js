@@ -3,13 +3,14 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
-import { connectDB } from "./config/db.js";
+import { connectDB, sequelize } from "./config/db.js";
 import userRoutes from "./routes/UserRoute.js";
 import authRoutes from "./routes/AuthRoute.js";
 import productRoutes from "./routes/ProductRoute.js";
 import uploadRoutes from "./routes/UploadRoute.js";
 import brandRoutes from "./routes/BrandRoute.js";
 import usagesRoutes from "./routes/UsageRoute.js";
+import orderRoutes from "./routes/OrderRoute.js";
 import passport from "./config/passport.js";
 import session from "express-session";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -53,9 +54,12 @@ app.use("/api/products", productRoutes);
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/usages", usagesRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Connect to DB and start server
 connectDB().then(async () => {
+  // Sync models in dev to ensure new tables exist
+  await sequelize.sync();
   // await seed();
   app.listen(PORT, () => {
     console.log(`Server bắt đầu ở cổng ${PORT}`);

@@ -16,13 +16,15 @@ import ProductDetailPage from "./components/ProductDetailPage";
 import CartPage from "./pages/Cart";
 import CheckoutPage from "./pages/Checkout";
 import ProfilePage from "@/pages/profile";
+import OrdersHistoryPage from "@/pages/orders/History";
+import OrderDetailPage2 from "@/pages/orders/Detail";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster position="top-right" richColors />
+      <Toaster position="bottom-right" richColors />
       <UserProvider>
         <CartProvider>
           <BrowserRouter>
@@ -38,6 +40,8 @@ const App = () => (
               <Route path="/cart" element={<CartPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/orders" element={<OrdersHistoryPage />} />
+              <Route path="/orders/:id" element={<OrderDetailPage2 />} />
               <Route path="/test" element={<Test />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

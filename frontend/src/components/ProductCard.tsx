@@ -143,19 +143,25 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         {/* Price */}
         <div className="pt-1">
-          <span className="text-xl font-bold text-primary">
-            {formatPrice(product.price)}
-          </span>
-          {originalPrice && (
-            <div className="text-xs text-muted-foreground line-through">
-              {formatPrice(originalPrice)}
+          <div className="flex items-end justify-between gap-2">
+            <div>
+              <div className="text-2xl font-extrabold text-[#1a73e8] leading-tight">
+                {formatPrice(product.price)}
+              </div>
+              {originalPrice && (
+                <div className="text-sm text-muted-foreground line-through">
+                  {formatPrice(originalPrice)}
+                </div>
+              )}
             </div>
-          )}
-          {discountPercentage && (
-            <div className="text-xs text-green-600 font-semibold">
-              Tiết kiệm: {formatPrice(originalPrice! - product.price)}
-            </div>
-          )}
+
+            {discountPercentage && originalPrice && (
+              <div className="text-sm text-green-600 font-semibold text-right leading-snug">
+                <div>Tiết kiệm</div>
+                <div>{formatPrice(originalPrice - product.price)}</div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Add to Cart */}

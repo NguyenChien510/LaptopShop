@@ -286,8 +286,13 @@ export const googleCallback = async (req, res) => {
     // Lưu refresh token vào DB
     await User.update({ refreshToken }, { where: { id: user.id } });
 
-    // Lưu access token vào cookie
-    res.cookie("accessToken", accessToken, { httpOnly: true });
+    // Lưu access token vào cookie (cross-site friendly for frontend at 5173)
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 15 * 60 * 1000,
+    });
 
     // Redirect về frontend
     res.redirect("http://localhost:5173");
