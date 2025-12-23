@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -81,6 +81,30 @@ const Checkout = () => {
     street: "",
   });
 
+  // Prefill from user profile stored in DB
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/users/profile", {
+          credentials: "include",
+        });
+        if (!res.ok) return; // silently ignore if not logged in
+        const user = await res.json();
+        setFormData((prev) => ({
+          ...prev,
+          name: user.name ?? prev.name,
+          phone: user.phone ?? prev.phone,
+          city: user.city ?? prev.city,
+          district: user.district ?? prev.district,
+          street: user.street ?? prev.street,
+        }));
+      } catch (err) {
+        // No toast to avoid noise on checkout load
+        console.error("Fetch profile error", err);
+      }
+    })();
+  }, []);
+
   const steps = [
     {
       icon: ShoppingCart,
@@ -95,7 +119,7 @@ const Checkout = () => {
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("vi-VN").format(price) + " ₫";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (cartItems.length === 0) {
@@ -115,10 +139,39 @@ const Checkout = () => {
       return;
     }
 
-    // TODO: Call API để tạo đơn hàng
-    toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
-    clearCart();
-    setTimeout(() => navigate("/"), 1500);
+    try {
+      const payload = {
+        items: cartItems.map((c) => ({
+          productId: c.id,
+          quantity: c.quantity,
+        })),
+        paymentMethod: paymentMethod === "cod" ? "COD" : "Online",
+        recipientName: formData.name,
+        phone: formData.phone,
+        city: formData.city,
+        district: formData.district,
+        street: formData.street,
+        shippingFee: 0,
+      };
+
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      const json = await res.json();
+      if (!json.success) {
+        throw new Error(json.message || "Tạo đơn hàng thất bại");
+      }
+
+      toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
+      clearCart();
+      navigate(`/orders/${json.data.id}`);
+    } catch (err: any) {
+      toast.error(err.message || "Có lỗi khi tạo đơn hàng");
+    }
   };
 
   const availableDistricts = formData.city
