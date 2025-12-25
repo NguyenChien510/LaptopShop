@@ -14,6 +14,8 @@ interface CartContextType {
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
+  setDiscount: (discount: number) => void;
+  discount: number;
   totalItems: number;
   totalPrice: number;
 }
@@ -27,6 +29,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     const saved = localStorage.getItem("cart");
     return saved ? JSON.parse(saved) : [];
   });
+  const [discount, setDiscount] = useState(0);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
@@ -76,6 +79,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         updateQuantity,
         clearCart,
+        setDiscount,
+        discount,
         totalItems,
         totalPrice,
       }}

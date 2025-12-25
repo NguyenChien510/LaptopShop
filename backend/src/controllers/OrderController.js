@@ -13,6 +13,7 @@ export const createOrder = async (req, res) => {
       district,
       street,
       shippingFee = 0,
+      discount = 0,
       notes,
     } = req.body;
 
@@ -26,12 +27,10 @@ export const createOrder = async (req, res) => {
     for (const it of items) {
       const p = await Product.findByPk(it.productId);
       if (!p)
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: `Product ${it.productId} not found`,
-          });
+        return res.status(404).json({
+          success: false,
+          message: `Product ${it.productId} not found`,
+        });
       const price = p.price; // using current price; could include sale logic
       const quantity = it.quantity ?? 1;
       subtotal += price * quantity;
@@ -44,7 +43,6 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    const discount = 0; // extend later
     const total = subtotal - discount + shippingFee;
 
     const order = await Order.create({

@@ -11,6 +11,7 @@ import uploadRoutes from "./routes/UploadRoute.js";
 import brandRoutes from "./routes/BrandRoute.js";
 import usagesRoutes from "./routes/UsageRoute.js";
 import orderRoutes from "./routes/OrderRoute.js";
+import couponRoutes from "./routes/CouponRoute.js";
 import passport from "./config/passport.js";
 import session from "express-session";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -80,6 +81,7 @@ app.post("/debug/test-insert", async (req, res) => {
 
 // Public routes (không cần auth)
 app.use("/api/auth", authRoutes);
+app.use("/api/coupons", couponRoutes);
 
 // Protected routes (cần auth)
 app.use(authMiddleware);

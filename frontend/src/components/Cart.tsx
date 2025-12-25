@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -14,17 +14,24 @@ import {
   Tag,
 } from "lucide-react";
 import { CartContext } from "@/context/CartContext";
+import { UserContext } from "@/context/UserContext";
+import { toast } from "sonner";
+import axios from "@/lib/axios";
 
 const Cart = () => {
   const cartContext = useContext(CartContext);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   if (!cartContext) {
     throw new Error("Cart must be used within CartProvider");
   }
 
-  const { cartItems, updateQuantity, removeFromCart } = cartContext;
+  const { cartItems, updateQuantity, removeFromCart, discount, setDiscount } =
+    cartContext;
   const [discountCode, setDiscountCode] = useState("");
-  const [discount, setDiscount] = useState(0);
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [isApplyingDiscount, setIsApplyingDiscount] = useState(false);
 
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("vi-VN").format(price) + " ₫";
@@ -35,11 +42,30 @@ const Cart = () => {
 
   const total = subtotal - discount;
 
-  const applyDiscount = () => {
-    if (discountCode.toUpperCase() === "SALE10") {
-      setDiscount(subtotal * 0.1);
-    } else {
+  const applyDiscount = async () => {
+    if (!discountCode.trim()) {
+      toast.error("Vui lòng nhập mã giảm giá");
+      return;
+    }
+
+    setIsApplyingDiscount(true);
+    try {
+      const res = await axios.post("/coupons/validate", {
+        code: discountCode,
+      });
+
+      if (res.data.success) {
+        const discountAmount = (subtotal * res.data.discount) / 100;
+        setDiscount(discountAmount);
+        setDiscountPercent(res.data.discount);
+        toast.success(res.data.message);
+      }
+    } catch (err: any) {
       setDiscount(0);
+      setDiscountPercent(0);
+      toast.error(err.response?.data?.message || "Mã giảm giá không hợp lệ");
+    } finally {
+      setIsApplyingDiscount(false);
     }
   };
 
@@ -48,6 +74,16 @@ const Cart = () => {
     { icon: FileText, label: "Thông tin đặt hàng", active: false },
     { icon: CheckCircle, label: "Hoàn tất đặt hàng", active: false },
   ];
+
+  const handleProceedToCheckout = () => {
+    if (!user) {
+      toast.info("Đăng nhập để bạn có thể quản lí đơn hàng nhé");
+      navigate("/login");
+      return;
+    }
+
+    navigate("/checkout");
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -192,13 +228,15 @@ const Cart = () => {
                   value={discountCode}
                   onChange={(e) => setDiscountCode(e.target.value)}
                   className="pl-10"
+                  disabled={isApplyingDiscount}
                 />
               </div>
               <Button
                 onClick={applyDiscount}
                 className="px-6 font-medium transition-all hover:shadow-md cursor-pointer"
+                disabled={isApplyingDiscount}
               >
-                Áp dụng
+                {isApplyingDiscount ? "Đang kiểm tra..." : "Áp dụng"}
               </Button>
             </div>
 
@@ -206,7 +244,9 @@ const Cart = () => {
               <>
                 <Separator />
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Giảm giá:</span>
+                  <span className="text-muted-foreground">
+                    Giảm giá ({discountPercent}%):
+                  </span>
                   <span className="text-green-600 font-medium">
                     -{formatPrice(discount)}
                   </span>
@@ -224,11 +264,12 @@ const Cart = () => {
             </div>
 
             <div className="flex gap-3 mt-3">
-              <Link to="/checkout" className="w-1/2">
-                <Button className="w-full h-11 text-base font-semibold rounded-lg transition-all hover:shadow-lg border-2 border-primary cursor-pointer">
-                  Tiến hành đặt hàng
-                </Button>
-              </Link>
+              <Button
+                onClick={handleProceedToCheckout}
+                className="w-1/2 h-11 text-base font-semibold rounded-lg transition-all hover:shadow-lg border-2 border-primary cursor-pointer"
+              >
+                Tiến hành đặt hàng
+              </Button>
 
               <Link to="/products" className="w-1/2">
                 <Button

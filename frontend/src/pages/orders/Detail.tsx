@@ -55,14 +55,38 @@ const OrderDetailPage = () => {
 
               <Separator className="my-4" />
 
-              <h3 className="font-semibold mb-2">Sản phẩm</h3>
-              <div className="space-y-2">
+              <h3 className="font-semibold mb-4">Sản phẩm</h3>
+              <div className="space-y-4">
                 {(order.OrderItems || []).map((it) => (
-                  <div key={it.id} className="flex justify-between">
-                    <span>
-                      {it.name} x{it.quantity}
-                    </span>
-                    <span>{formatPrice(it.price * it.quantity)}</span>
+                  <div key={it.id} className="flex gap-4 p-4 border rounded-lg">
+                    {/* Product Image */}
+                    {it.thumbnail && (
+                      <div className="w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
+                        <img
+                          src={it.thumbnail}
+                          alt={it.name}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    )}
+
+                    {/* Product Info */}
+                    <div className="flex-1 flex justify-between items-center">
+                      <div>
+                        <p className="font-medium">{it.name}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Số lượng: {it.quantity}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Giá: {formatPrice(it.price)}/cái
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">
+                          {formatPrice(it.price * it.quantity)}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

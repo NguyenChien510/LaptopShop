@@ -70,7 +70,7 @@ const Checkout = () => {
     throw new Error("Checkout must be used within CartProvider");
   }
 
-  const { totalPrice, clearCart, cartItems } = cartContext;
+  const { totalPrice, clearCart, cartItems, discount } = cartContext;
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [formData, setFormData] = useState({
@@ -152,6 +152,7 @@ const Checkout = () => {
         district: formData.district,
         street: formData.street,
         shippingFee: 0,
+        discount: discount,
       };
 
       const res = await fetch("/api/orders", {
