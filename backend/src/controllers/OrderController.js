@@ -12,9 +12,7 @@ export const createOrder = async (req, res) => {
       city,
       district,
       street,
-      shippingFee = 0,
       discount = 0,
-      notes,
     } = req.body;
 
     if (!items.length) {
@@ -43,11 +41,11 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    const total = subtotal - discount + shippingFee;
+    const total = subtotal - discount;
 
     const order = await Order.create({
       userId: req.user.id,
-      status: "pending",
+      status: "Thanh toán thành công",
       paymentMethod,
       recipientName,
       phone,
@@ -56,9 +54,7 @@ export const createOrder = async (req, res) => {
       street,
       subtotal,
       discount,
-      shippingFee,
       total,
-      notes,
     });
 
     // Create items
@@ -111,13 +107,7 @@ export const getOrderById = async (req, res) => {
 export const updateStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const allowed = [
-      "pending",
-      "confirmed",
-      "shipping",
-      "delivered",
-      "cancelled",
-    ];
+    const allowed = ["Thanh toán thất bại", "Thanh toán thành công"];
     if (!allowed.includes(status))
       return res
         .status(400)
@@ -143,12 +133,12 @@ export const cancelOrder = async (req, res) => {
     if (order.userId !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ success: false, message: "Forbidden" });
     }
-    if (order.status === "delivered" || order.status === "cancelled") {
+    if (order.status === "Thanh toán thành công") {
       return res
         .status(400)
         .json({ success: false, message: "Order cannot be cancelled" });
     }
-    order.status = "cancelled";
+    order.status = "Thanh toán thất bại";
     await order.save();
     res.json({ success: true, data: order });
   } catch (err) {

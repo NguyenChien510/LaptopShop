@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import type { Product } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,9 @@ import {
   Battery,
   Package,
 } from "lucide-react";
+import { CartContext } from "@/context/CartContext";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface ProductDetailProps {
   product: Product;
@@ -30,6 +33,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const [ratingInput, setRatingInput] = useState(0);
   const [newComment, setNewComment] = useState("");
+  const cartContext = useContext(CartContext);
+  const navigate = useNavigate();
+
+  if (!cartContext) {
+    throw new Error("ProductDetail must be used within CartProvider");
+  }
+
+  const { addToCart, updateQuantity, cartItems } = cartContext;
 
   const images = product.images?.length ? product.images : [product.thumbnail];
 
@@ -122,6 +133,33 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
     )
       return "Màn hình";
     return spec.label;
+  };
+
+  const syncCartWithQuantity = () => {
+    const existing = cartItems.find((i) => i.id === product.id);
+    if (existing) {
+      updateQuantity(product.id, existing.quantity + quantity);
+    } else {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        thumbnail: product.thumbnail,
+      });
+      if (quantity > 1) {
+        updateQuantity(product.id, quantity);
+      }
+    }
+  };
+
+  const handleAddToCart = () => {
+    syncCartWithQuantity();
+    toast.success("Đã thêm vào giỏ hàng");
+  };
+
+  const handleBuyNow = () => {
+    syncCartWithQuantity();
+    navigate("/checkout");
   };
 
   return (
@@ -290,11 +328,17 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
           </div>
 
           <div className="flex gap-4">
-            <Button className="flex-1 cursor-pointer h-14 w-14">
+            <Button
+              className="flex-1 cursor-pointer h-14 w-14"
+              onClick={handleAddToCart}
+            >
               <ShoppingCart className="h-5 w-5 mr-2" />
               Thêm vào giỏ
             </Button>
-            <Button className="h-14 w-14 flex-1 bg-white text-black hover:bg-gray-100 border border-gray-300 dark:bg-white dark:text-black dark:hover:bg-gray-200 dark:border-gray-400 cursor-pointer">
+            <Button
+              className="h-14 w-14 flex-1 bg-white text-black hover:bg-gray-100 border border-gray-300 dark:bg-white dark:text-black dark:hover:bg-gray-200 dark:border-gray-400 cursor-pointer"
+              onClick={handleBuyNow}
+            >
               <ShoppingCart className="h-5 w-5 mr-2" />
               Mua ngay
             </Button>
@@ -333,45 +377,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
         </CardContent>
       </Card>
 
-      {/* ================= COMMENTS ================= */}
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <MessageCircle /> Đánh giá sản phẩm
-        </h2>
-
-        <Card>
-          <CardContent>
-            <h3 className="font-semibold mb-4">Viết đánh giá của bạn</h3>
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">Đánh giá:</span>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      onClick={() => setRatingInput(i + 1)}
-                      className={`h-5 w-5 cursor-pointer transition-colors ${
-                        i < ratingInput
-                          ? "fill-yellow-400 text-yellow-400"
-                          : "text-muted-foreground hover:fill-yellow-400 hover:text-yellow-400"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <Textarea
-                placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm này..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                className="min-h-[100px]"
-              />
-              <Button className="w-full sm:w-auto cursor-pointer">
-                Gửi đánh giá
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Đã xoá phần đánh giá; đánh giá chuyển sang trang lịch sử đơn */}
     </div>
   );
 };

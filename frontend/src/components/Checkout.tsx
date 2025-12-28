@@ -105,6 +105,12 @@ const Checkout = () => {
     })();
   }, []);
 
+  // Calculate subtotal before discount
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
   const steps = [
     {
       icon: ShoppingCart,
@@ -407,15 +413,27 @@ const Checkout = () => {
 
         {/* Order Summary */}
         <Card>
-          <CardContent className="p-4 md:p-6">
-            <div className="flex justify-between items-center mb-4">
-              <span className="font-semibold">Tổng tiền thanh toán:</span>
-              <span className="text-primary font-bold text-xl">
+          <CardContent className="p-4 md:p-6 space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Tổng tiền hàng:</span>
+              <span className="font-semibold">{formatPrice(subtotal)}</span>
+            </div>
+
+            {discount > 0 && (
+              <div className="flex justify-between items-center text-green-600 dark:text-green-400">
+                <span className="text-muted-foreground">Giảm giá:</span>
+                <span className="font-semibold">-{formatPrice(discount)}</span>
+              </div>
+            )}
+
+            <Separator />
+
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-lg">Tổng thanh toán:</span>
+              <span className="text-primary font-bold text-2xl">
                 {formatPrice(totalPrice)}
               </span>
             </div>
-
-            <Separator className="my-4" />
 
             <Button
               type="submit"
@@ -425,7 +443,7 @@ const Checkout = () => {
             </Button>
 
             <Link to="/cart">
-              <Button variant="outline" className="w-full h-12 text-base mt-3">
+              <Button variant="outline" className="w-full h-12 text-base">
                 Quay lại giỏ hàng
               </Button>
             </Link>

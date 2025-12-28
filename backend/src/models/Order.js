@@ -6,14 +6,8 @@ const Order = sequelize.define(
   {
     userId: { type: DataTypes.INTEGER, allowNull: false },
     status: {
-      type: DataTypes.ENUM(
-        "pending",
-        "confirmed",
-        "shipping",
-        "delivered",
-        "cancelled"
-      ),
-      defaultValue: "pending",
+      type: DataTypes.ENUM("Thanh toán thất bại", "Thanh toán thành công"),
+      defaultValue: "Thanh toán thành công",
       allowNull: false,
     },
     paymentMethod: {
@@ -30,9 +24,7 @@ const Order = sequelize.define(
     // Totals
     subtotal: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
     discount: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
-    shippingFee: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
     total: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
-    notes: { type: DataTypes.STRING, allowNull: true },
   },
   { timestamps: true }
 );

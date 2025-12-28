@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/layouts/Footer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import type { Order } from "@/types/order";
@@ -31,8 +33,14 @@ const OrderDetailPage = () => {
           <div className="text-center text-muted-foreground">Đang tải…</div>
         ) : (
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <CardTitle>Đơn hàng #{order.id}</CardTitle>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/orders">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Quay lại danh sách
+                </Link>
+              </Button>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-6">

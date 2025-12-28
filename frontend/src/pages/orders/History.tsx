@@ -5,10 +5,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Package, Calendar, CreditCard, Eye, RotateCcw } from "lucide-react";
+import {
+  Package,
+  Calendar,
+  CreditCard,
+  Eye,
+  RotateCcw,
+  Star,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Order } from "@/types/order";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(
@@ -26,15 +34,10 @@ const formatDate = (dateStr: string) => {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "delivered":
-      return "bg-green-500/20 text-green-600 border-green-500/30";
-    case "shipping":
-      return "bg-blue-500/20 text-blue-600 border-blue-500/30";
-    case "pending":
-    case "confirmed":
-      return "bg-yellow-500/20 text-yellow-600 border-yellow-500/30";
-    case "cancelled":
-      return "bg-red-500/20 text-red-600 border-red-500/30";
+    case "Thanh toán thành công":
+      return "bg-green-500/20 text-green-700 border-green-500/30";
+    case "Thanh toán thất bại":
+      return "bg-red-500/20 text-red-700 border-red-500/30";
     default:
       return "bg-muted text-muted-foreground";
   }
@@ -43,6 +46,12 @@ const getStatusColor = (status: string) => {
 const OrdersHistoryPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [reviewOrderId, setReviewOrderId] = useState<number | null>(null);
+  const [reviewProductId, setReviewProductId] = useState<number | null>(null);
+  const [reviewRating, setReviewRating] = useState<number>(0);
+  const [reviewText, setReviewText] = useState<string>("");
+  const [hasReviewed, setHasReviewed] = useState<boolean>(false);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -57,6 +66,68 @@ const OrdersHistoryPage = () => {
       }
     })();
   }, []);
+
+  const openReview = async (order: Order) => {
+    setReviewOrderId(order.id);
+    const firstItem = (order.OrderItems || [])[0];
+    const productId = firstItem ? firstItem.productId : null;
+    setReviewProductId(productId);
+    setReviewRating(0);
+    setReviewText("");
+
+    // Check if user already reviewed this product
+    if (productId) {
+      try {
+        const res = await fetch(`/api/reviews/check/${productId}`, {
+          credentials: "include",
+        });
+        const json = await res.json();
+        setHasReviewed(json.reviewed);
+      } catch (err) {
+        console.error("Error checking review:", err);
+      }
+    }
+  };
+
+  const submitReview = async () => {
+    if (
+      !reviewOrderId ||
+      !reviewProductId ||
+      reviewRating === 0 ||
+      !reviewText.trim()
+    ) {
+      toast.error("Vui lòng chọn sản phẩm, đánh giá sao và nhập nội dung");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: reviewProductId,
+          rating: reviewRating,
+          comment: reviewText,
+        }),
+        credentials: "include",
+      });
+      const json = await res.json();
+
+      if (json.success) {
+        toast.success("Đã gửi đánh giá");
+        setReviewOrderId(null);
+        setHasReviewed(true);
+      } else {
+        toast.error(json.message || "Lỗi khi gửi đánh giá");
+      }
+    } catch (err) {
+      console.error("Error submitting review:", err);
+      toast.error("Lỗi khi gửi đánh giá");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -158,7 +229,17 @@ const OrdersHistoryPage = () => {
                           Chi tiết
                         </Link>
                       </Button>
-                      {order.status === "delivered" && (
+                      {order.status === "Thanh toán thành công" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openReview(order)}
+                        >
+                          <Star className="h-4 w-4 mr-2" />
+                          Đánh giá
+                        </Button>
+                      )}
+                      {order.status === "Thanh toán thất bại" && (
                         <Button variant="outline" size="sm">
                           <RotateCcw className="h-4 w-4 mr-2" />
                           Mua lại
@@ -167,6 +248,85 @@ const OrdersHistoryPage = () => {
                     </div>
                   </div>
                 </CardContent>
+
+                {reviewOrderId === order.id && (
+                  <div className="px-4 pb-4">
+                    <Separator className="my-4" />
+                    {hasReviewed ? (
+                      <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 rounded-lg text-center">
+                        <p className="text-blue-700 dark:text-blue-400 font-medium">
+                          ✓ Bạn đã đánh giá sản phẩm này rồi
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <h4 className="font-semibold">
+                          Viết đánh giá cho sản phẩm trong đơn
+                        </h4>
+                        <div className="grid md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="text-sm text-muted-foreground">
+                              Chọn sản phẩm
+                            </label>
+                            <select
+                              className="mt-1 w-full border rounded p-2 bg-background"
+                              value={reviewProductId ?? undefined}
+                              onChange={(e) =>
+                                setReviewProductId(Number(e.target.value))
+                              }
+                            >
+                              {(order.OrderItems || []).map((item) => (
+                                <option key={item.id} value={item.productId}>
+                                  {item.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="text-sm text-muted-foreground">
+                              Đánh giá sao
+                            </label>
+                            <div className="mt-1 flex items-center gap-2">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  onClick={() => setReviewRating(i + 1)}
+                                  className={`h-5 w-5 cursor-pointer ${
+                                    i < reviewRating
+                                      ? "fill-yellow-400 text-yellow-400"
+                                      : "text-muted-foreground"
+                                  }`}
+                                />
+                              ))}
+                              <span className="text-sm text-muted-foreground">
+                                {reviewRating} / 5
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <Textarea
+                          placeholder="Chia sẻ trải nghiệm của bạn..."
+                          value={reviewText}
+                          onChange={(e) => setReviewText(e.target.value)}
+                          className="min-h-[100px]"
+                          disabled={submitting}
+                        />
+                        <div className="flex gap-2">
+                          <Button onClick={submitReview} disabled={submitting}>
+                            {submitting ? "Đang gửi..." : "Gửi đánh giá"}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => setReviewOrderId(null)}
+                            disabled={submitting}
+                          >
+                            Hủy
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </Card>
             ))}
           </div>

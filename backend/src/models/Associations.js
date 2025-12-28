@@ -3,9 +3,9 @@ import Series from "./Series.js";
 import Usage from "./Usage.js";
 import Product from "./Product.js";
 import User from "./User.js";
-import Comment from "./Comment.js";
 import Order from "./Order.js";
 import OrderItem from "./OrderItem.js";
+import Review from "./Review.js";
 
 // Brand - Series
 Brand.hasMany(Series, { foreignKey: "brandId" });
@@ -31,15 +31,7 @@ Usage.belongsToMany(Product, {
   onDelete: "CASCADE",
 });
 
-// User - Comment
-User.hasMany(Comment, { foreignKey: "userId", onDelete: "CASCADE" });
-Comment.belongsTo(User, { foreignKey: "userId" });
-
-// Product - Comment
-Product.hasMany(Comment, { foreignKey: "productId", onDelete: "CASCADE" });
-Comment.belongsTo(Product, { foreignKey: "productId" });
-
-export { Brand, Series, Usage, Product, User, Comment };
+export { Brand, Series, Usage, Product, User, Order, OrderItem, Review };
 
 // User - Order
 User.hasMany(Order, { foreignKey: "userId", onDelete: "CASCADE" });
@@ -52,3 +44,11 @@ OrderItem.belongsTo(Order, { foreignKey: "orderId" });
 // Product - OrderItem
 Product.hasMany(OrderItem, { foreignKey: "productId", onDelete: "SET NULL" });
 OrderItem.belongsTo(Product, { foreignKey: "productId" });
+
+// User - Review
+User.hasMany(Review, { foreignKey: "userId", onDelete: "CASCADE" });
+Review.belongsTo(User, { foreignKey: "userId" });
+
+// Product - Review
+Product.hasMany(Review, { foreignKey: "productId", onDelete: "CASCADE" });
+Review.belongsTo(Product, { foreignKey: "productId" });

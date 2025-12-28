@@ -1,9 +1,4 @@
-export type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "shipping"
-  | "delivered"
-  | "cancelled";
+export type OrderStatus = "Thanh toán thất bại" | "Thanh toán thành công";
 export type PaymentMethod = "COD" | "Online";
 
 export interface OrderItem {
@@ -28,9 +23,7 @@ export interface Order {
   street?: string;
   subtotal: number;
   discount: number;
-  shippingFee: number;
   total: number;
-  notes?: string;
   createdAt: string;
   updatedAt: string;
   OrderItems?: OrderItem[];
