@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 import word from "@/assets/word.png";
 import excel from "@/assets/excel.png";
@@ -21,36 +22,39 @@ import programmingLaptop from "@/assets/code.avif";
 import gamingLaptop from "@/assets/laptop-gaming.jpg";
 
 const LaptopCategories = () => {
+  const navigate = useNavigate();
+
+  // usageId mapping theo DB: 2 Office, 3 Design, 4 Development, 5 Gaming
   const categories = [
     {
-      id: 0,
-      title: "HỌC TẬP, VĂN PHÒNG",
-      description: "Laptop phù hợp cho học tập và công việc văn phòng",
+      usageId: 2,
+      title: "VĂN PHÒNG",
+      description: "Hiệu năng ổn định cho làm việc và họp trực tuyến",
       images: [word, excel, ppt],
       laptopImage: officeLaptop,
-      color: "from-blue-500 to-blue-600",
+      color: "from-cyan-500 to-sky-600",
     },
     {
-      id: 1,
-      title: "ĐỒ HỌA, KỸ THUẬT",
-      description: "Laptop cao cấp cho thiết kế và kỹ thuật chuyên nghiệp",
+      usageId: 3,
+      title: "THIẾT KẾ",
+      description: "GPU/CPU mạnh cho thiết kế đồ họa, dựng hình",
       images: [ps, ai, autocad],
       laptopImage: designLaptop,
       color: "from-purple-500 to-pink-500",
     },
     {
-      id: 2,
-      title: "LẬP TRÌNH",
-      description: "Laptop mạnh mẽ cho lập trình và phát triển phần mềm",
+      usageId: 4,
+      title: "PHÁT TRIỂN",
+      description: "Máy mượt mà cho code, build và chạy môi trường ảo",
       images: [vsc, vs, nb],
       laptopImage: programmingLaptop,
       color: "from-green-500 to-emerald-500",
     },
     {
-      id: 3,
+      usageId: 5,
       title: "GAMING",
       description:
-        "Laptop gaming hiệu năng cao cho trải nghiệm chơi game tốt nhất",
+        "Tản nhiệt tốt, GPU mạnh cho trải nghiệm game ổn định và mượt",
       images: [lol, fo4, gta],
       laptopImage: gamingLaptop,
       color: "from-orange-500 to-red-500",
@@ -74,8 +78,11 @@ const LaptopCategories = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category) => (
             <Card
-              key={category.id}
+              key={category.usageId}
               className={`group hover:shadow-lg transition-all duration-300 border-0 hover:scale-105 cursor-pointer`}
+              onClick={() =>
+                navigate(`/allproducts?usageId=${category.usageId}`)
+              }
             >
               <CardContent className="p-6 text-center">
                 {/* Ảnh laptop tượng trưng */}
@@ -115,6 +122,9 @@ const LaptopCategories = () => {
                   variant="outline"
                   size="sm"
                   className="cursor-pointer w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
+                  onClick={() =>
+                    navigate(`/allproducts?usageId=${category.usageId}`)
+                  }
                 >
                   Xem sản phẩm
                 </Button>

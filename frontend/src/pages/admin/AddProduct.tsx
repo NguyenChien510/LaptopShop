@@ -324,7 +324,7 @@ const AddProduct = () => {
       }
 
       const productData = {
-        ...formData,
+        name: formData.name,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock) || 0,
         sale: parseInt(formData.sale) || 0,
@@ -334,7 +334,7 @@ const AddProduct = () => {
         detailSpecs: detailSpecs.filter((d) => d.value),
         brandId,
         seriesId,
-        usage: formData.usage, // gửi list id
+        usageIds: formData.usage, // đổi tên sang usageIds để match backend
       };
 
       console.log("[ADD PRODUCT] Payload:", productData);

@@ -45,8 +45,12 @@ export const createOrder = async (req, res) => {
 
     const order = await Order.create({
       userId: req.user.id,
-      status: "Thanh toán thành công",
+      status:
+        paymentMethod === "Online"
+          ? "Thanh toán thất bại"
+          : "Thanh toán thành công",
       paymentMethod,
+      paymentStatus: paymentMethod === "Online" ? "pending" : "completed",
       recipientName,
       phone,
       city,

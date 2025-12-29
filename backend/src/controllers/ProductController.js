@@ -20,7 +20,10 @@ export const getAllProducts = async (req, res) => {
       whereClause.seriesId = seriesId;
     }
 
-    const includeOptions = [];
+    const includeOptions = [
+      { model: Brand, attributes: ["id", "name"] },
+      { model: Series, attributes: ["id", "name"] },
+    ];
 
     // Filter theo usage (many-to-many relationship)
     if (usageId) {
@@ -30,12 +33,19 @@ export const getAllProducts = async (req, res) => {
         through: { attributes: [] },
         required: true,
       });
+    } else {
+      // Include Usage khi không filter, để trả về đầy đủ info
+      includeOptions.push({
+        model: Usage,
+        attributes: ["id", "name"],
+        through: { attributes: [] },
+      });
     }
 
     // Fetch products with basic filters first
     let products = await Product.findAll({
       where: whereClause,
-      include: includeOptions.length > 0 ? includeOptions : undefined,
+      include: includeOptions,
     });
 
     // Filter theo specs trong shortSpecs JSON - client-side filtering
@@ -424,7 +434,17 @@ export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const product = await Product.findByPk(id);
+    const product = await Product.findByPk(id, {
+      include: [
+        { model: Brand, attributes: ["id", "name"] },
+        { model: Series, attributes: ["id", "name"] },
+        {
+          model: Usage,
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
+      ],
+    });
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });

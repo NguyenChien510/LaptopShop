@@ -173,9 +173,35 @@ const Checkout = () => {
         throw new Error(json.message || "Tạo đơn hàng thất bại");
       }
 
-      toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
-      clearCart();
-      navigate(`/orders/${json.data.id}`);
+      const orderId = json.data.id;
+
+      // Nếu là thanh toán online, redirect đến VNPAY
+      if (paymentMethod === "online") {
+        try {
+          const paymentRes = await fetch("/api/payment/create-payment-url", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ orderId }),
+          });
+
+          const paymentJson = await paymentRes.json();
+          if (paymentJson.success) {
+            // Xóa giỏ hàng và redirect đến VNPAY
+            clearCart();
+            window.location.href = paymentJson.data.paymentUrl;
+          } else {
+            throw new Error(paymentJson.message || "Lỗi tạo thanh toán");
+          }
+        } catch (err: any) {
+          toast.error(err.message || "Lỗi tạo URL thanh toán");
+        }
+      } else {
+        // COD - thành công ngay
+        toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
+        clearCart();
+        navigate(`/orders/${orderId}`);
+      }
     } catch (err: any) {
       toast.error(err.message || "Có lỗi khi tạo đơn hàng");
     }
@@ -394,20 +420,7 @@ const Checkout = () => {
               </label>
             </RadioGroup>
 
-            {paymentMethod === "online" && (
-              <div className="mt-4 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-2">
-                  Thông tin chuyển khoản:
-                </p>
-                <p className="text-sm text-blue-600 dark:text-blue-400">
-                  Ngân hàng: Vietcombank
-                  <br />
-                  Số TK: 1234567890
-                  <br />
-                  Chủ TK: CONG TY ABC
-                </p>
-              </div>
-            )}
+            {/* Removed manual bank transfer info for online payment */}
           </CardContent>
         </Card>
 

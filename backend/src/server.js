@@ -13,6 +13,7 @@ import usagesRoutes from "./routes/UsageRoute.js";
 import orderRoutes from "./routes/OrderRoute.js";
 import reviewRoutes from "./routes/ReviewRoute.js";
 import couponRoutes from "./routes/CouponRoute.js";
+import paymentRoutes from "./routes/PaymentRoute.js";
 import passport from "./config/passport.js";
 import session from "express-session";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -84,6 +85,7 @@ app.post("/debug/test-insert", async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/reviews", reviewRoutes); // Public read, protected write
+app.use("/api/payment", paymentRoutes); // Payment routes (create auth, callback/ipn public)
 
 // Protected routes (cần auth)
 app.use(authMiddleware);

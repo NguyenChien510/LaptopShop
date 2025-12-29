@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/layouts/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -52,6 +52,7 @@ const OrdersHistoryPage = () => {
   const [reviewText, setReviewText] = useState<string>("");
   const [hasReviewed, setHasReviewed] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [repayingId, setRepayingId] = useState<number | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -126,6 +127,35 @@ const OrdersHistoryPage = () => {
       toast.error("Lỗi khi gửi đánh giá");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleRepay = async (order: Order) => {
+    if (order.paymentMethod !== "Online") {
+      toast.error("Chỉ hỗ trợ thanh toán lại cho đơn online");
+      return;
+    }
+
+    setRepayingId(order.id);
+    try {
+      const res = await fetch("/api/payment/create-payment-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ orderId: order.id }),
+      });
+
+      const json = await res.json();
+      if (json.success && json.data?.paymentUrl) {
+        window.location.href = json.data.paymentUrl;
+      } else {
+        toast.error(json.message || "Không tạo được URL thanh toán");
+      }
+    } catch (err) {
+      console.error("Repay error:", err);
+      toast.error("Có lỗi khi thanh toán lại");
+    } finally {
+      setRepayingId(null);
     }
   };
 
@@ -240,9 +270,16 @@ const OrdersHistoryPage = () => {
                         </Button>
                       )}
                       {order.status === "Thanh toán thất bại" && (
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRepay(order)}
+                          disabled={repayingId === order.id}
+                        >
                           <RotateCcw className="h-4 w-4 mr-2" />
-                          Mua lại
+                          {repayingId === order.id
+                            ? "Đang chuyển VNPAY..."
+                            : "Mua lại"}
                         </Button>
                       )}
                     </div>

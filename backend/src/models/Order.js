@@ -7,12 +7,17 @@ const Order = sequelize.define(
     userId: { type: DataTypes.INTEGER, allowNull: false },
     status: {
       type: DataTypes.ENUM("Thanh toán thất bại", "Thanh toán thành công"),
-      defaultValue: "Thanh toán thành công",
+      defaultValue: "Thanh toán thất bại",
       allowNull: false,
     },
     paymentMethod: {
       type: DataTypes.ENUM("COD", "Online"),
       defaultValue: "COD",
+      allowNull: false,
+    },
+    paymentStatus: {
+      type: DataTypes.ENUM("pending", "completed", "failed"),
+      defaultValue: "pending",
       allowNull: false,
     },
     // Snapshot of shipping address at order time
@@ -25,6 +30,9 @@ const Order = sequelize.define(
     subtotal: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
     discount: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
     total: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
+    // VNPAY info
+    paymentRef: { type: DataTypes.STRING, allowNull: true },
+    transactionId: { type: DataTypes.STRING, allowNull: true },
   },
   { timestamps: true }
 );

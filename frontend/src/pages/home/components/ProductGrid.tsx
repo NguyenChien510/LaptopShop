@@ -1,8 +1,33 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "../../../components/ProductCard";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import type { Product } from "@/types/product";
+import axios from "@/lib/axios";
 
 const ProductGrid = () => {
+  const [topProducts, setTopProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchTop = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("/products");
+        const sorted = Array.isArray(res.data)
+          ? [...res.data].sort((a, b) => (b?.sold || 0) - (a?.sold || 0))
+          : [];
+        setTopProducts(sorted.slice(0, 4));
+      } catch (err) {
+        console.error("Fetch top products error:", err);
+        setTopProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTop();
+  }, []);
   return (
     <section className="py-16">
       <div className="container">
@@ -22,6 +47,25 @@ const ProductGrid = () => {
             </span>
             , mang đến trải nghiệm tuyệt vời cho mọi nhu cầu
           </p>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {loading && (
+            <div className="col-span-full text-center text-muted-foreground">
+              Đang tải sản phẩm nổi bật...
+            </div>
+          )}
+          {!loading && topProducts.length === 0 && (
+            <div className="col-span-full text-center text-muted-foreground">
+              Chưa có sản phẩm nổi bật
+            </div>
+          )}
+          {!loading &&
+            topProducts.map((product) => (
+              <Link key={product.id} to={`/products/${product.id}`}>
+                <ProductCard product={product} />
+              </Link>
+            ))}
         </div>
 
         <div className="text-center mt-12">
