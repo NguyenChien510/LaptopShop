@@ -70,7 +70,7 @@ const Checkout = () => {
     throw new Error("Checkout must be used within CartProvider");
   }
 
-  const { totalPrice, clearCart, cartItems, discount } = cartContext;
+  const { totalPrice, clearCart, cartItems, discount, addToCart } = cartContext;
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const [formData, setFormData] = useState({
@@ -80,6 +80,31 @@ const Checkout = () => {
     district: "",
     street: "",
   });
+
+  // Handle repurchase items from localStorage
+  useEffect(() => {
+    const repurchaseItems = localStorage.getItem("repurchaseItems");
+    if (repurchaseItems) {
+      try {
+        const items = JSON.parse(repurchaseItems);
+        items.forEach((item: any) => {
+          if (addToCart) {
+            addToCart({
+              id: item.id,
+              name: item.name,
+              price: item.price,
+              thumbnail: item.thumbnail,
+              quantity: item.quantity || 1,
+            });
+          }
+        });
+        // Clear localStorage after adding
+        localStorage.removeItem("repurchaseItems");
+      } catch (err) {
+        console.error("Error parsing repurchaseItems:", err);
+      }
+    }
+  }, [addToCart]);
 
   // Prefill from user profile stored in DB
   useEffect(() => {

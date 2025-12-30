@@ -7,7 +7,7 @@ import { sendOTP } from "../controllers/EmailController.js";
 // Tạo Access Token
 const generateAccessToken = (user) => {
   return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "15m", // ngắn hạn
+    expiresIn: "30m", // ngắn hạn
   });
 };
 

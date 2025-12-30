@@ -52,7 +52,6 @@ const OrdersHistoryPage = () => {
   const [reviewText, setReviewText] = useState<string>("");
   const [hasReviewed, setHasReviewed] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const [repayingId, setRepayingId] = useState<number | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -69,12 +68,8 @@ const OrdersHistoryPage = () => {
   }, []);
 
   const openReview = async (order: Order) => {
-    setReviewOrderId(order.id);
     const firstItem = (order.OrderItems || [])[0];
     const productId = firstItem ? firstItem.productId : null;
-    setReviewProductId(productId);
-    setReviewRating(0);
-    setReviewText("");
 
     // Check if user already reviewed this product
     if (productId) {
@@ -83,11 +78,20 @@ const OrdersHistoryPage = () => {
           credentials: "include",
         });
         const json = await res.json();
-        setHasReviewed(json.reviewed);
+        if (json.reviewed) {
+          toast.info("Bạn đã đánh giá sản phẩm này rồi");
+          return;
+        }
       } catch (err) {
         console.error("Error checking review:", err);
       }
     }
+
+    setReviewOrderId(order.id);
+    setReviewProductId(productId);
+    setReviewRating(0);
+    setReviewText("");
+    setHasReviewed(false);
   };
 
   const submitReview = async () => {
@@ -130,32 +134,25 @@ const OrdersHistoryPage = () => {
     }
   };
 
-  const handleRepay = async (order: Order) => {
-    if (order.paymentMethod !== "Online") {
-      toast.error("Chỉ hỗ trợ thanh toán lại cho đơn online");
-      return;
-    }
-
-    setRepayingId(order.id);
+  const handleRepurchase = async (order: Order) => {
     try {
-      const res = await fetch("/api/payment/create-payment-url", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ orderId: order.id }),
-      });
+      // Get cart context or add items to cart
+      const cartItems = (order.OrderItems || []).map((item) => ({
+        id: item.productId,
+        name: item.name,
+        price: item.price,
+        thumbnail: item.thumbnail,
+        quantity: item.quantity,
+      }));
 
-      const json = await res.json();
-      if (json.success && json.data?.paymentUrl) {
-        window.location.href = json.data.paymentUrl;
-      } else {
-        toast.error(json.message || "Không tạo được URL thanh toán");
-      }
+      // Store in localStorage to retrieve in checkout
+      localStorage.setItem("repurchaseItems", JSON.stringify(cartItems));
+
+      // Navigate to checkout
+      window.location.href = "/checkout";
     } catch (err) {
-      console.error("Repay error:", err);
-      toast.error("Có lỗi khi thanh toán lại");
-    } finally {
-      setRepayingId(null);
+      console.error("Repurchase error:", err);
+      toast.error("Có lỗi khi mua lại");
     }
   };
 
@@ -273,13 +270,10 @@ const OrdersHistoryPage = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleRepay(order)}
-                          disabled={repayingId === order.id}
+                          onClick={() => handleRepurchase(order)}
                         >
                           <RotateCcw className="h-4 w-4 mr-2" />
-                          {repayingId === order.id
-                            ? "Đang chuyển VNPAY..."
-                            : "Mua lại"}
+                          Mua lại
                         </Button>
                       )}
                     </div>
@@ -289,79 +283,71 @@ const OrdersHistoryPage = () => {
                 {reviewOrderId === order.id && (
                   <div className="px-4 pb-4">
                     <Separator className="my-4" />
-                    {hasReviewed ? (
-                      <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 rounded-lg text-center">
-                        <p className="text-blue-700 dark:text-blue-400 font-medium">
-                          ✓ Bạn đã đánh giá sản phẩm này rồi
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <h4 className="font-semibold">
-                          Viết đánh giá cho sản phẩm trong đơn
-                        </h4>
-                        <div className="grid md:grid-cols-3 gap-4">
-                          <div>
-                            <label className="text-sm text-muted-foreground">
-                              Chọn sản phẩm
-                            </label>
-                            <select
-                              className="mt-1 w-full border rounded p-2 bg-background"
-                              value={reviewProductId ?? undefined}
-                              onChange={(e) =>
-                                setReviewProductId(Number(e.target.value))
-                              }
-                            >
-                              {(order.OrderItems || []).map((item) => (
-                                <option key={item.id} value={item.productId}>
-                                  {item.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="md:col-span-2">
-                            <label className="text-sm text-muted-foreground">
-                              Đánh giá sao
-                            </label>
-                            <div className="mt-1 flex items-center gap-2">
-                              {[...Array(5)].map((_, i) => (
-                                <Star
-                                  key={i}
-                                  onClick={() => setReviewRating(i + 1)}
-                                  className={`h-5 w-5 cursor-pointer ${
-                                    i < reviewRating
-                                      ? "fill-yellow-400 text-yellow-400"
-                                      : "text-muted-foreground"
-                                  }`}
-                                />
-                              ))}
-                              <span className="text-sm text-muted-foreground">
-                                {reviewRating} / 5
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <Textarea
-                          placeholder="Chia sẻ trải nghiệm của bạn..."
-                          value={reviewText}
-                          onChange={(e) => setReviewText(e.target.value)}
-                          className="min-h-[100px]"
-                          disabled={submitting}
-                        />
-                        <div className="flex gap-2">
-                          <Button onClick={submitReview} disabled={submitting}>
-                            {submitting ? "Đang gửi..." : "Gửi đánh giá"}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            onClick={() => setReviewOrderId(null)}
-                            disabled={submitting}
+                    <div className="space-y-4">
+                      <h4 className="font-semibold">
+                        Viết đánh giá cho sản phẩm trong đơn
+                      </h4>
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="text-sm text-muted-foreground">
+                            Chọn sản phẩm
+                          </label>
+                          <select
+                            className="mt-1 w-full border rounded p-2 bg-background"
+                            value={reviewProductId ?? undefined}
+                            onChange={(e) =>
+                              setReviewProductId(Number(e.target.value))
+                            }
                           >
-                            Hủy
-                          </Button>
+                            {(order.OrderItems || []).map((item) => (
+                              <option key={item.id} value={item.productId}>
+                                {item.name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="text-sm text-muted-foreground">
+                            Đánh giá sao
+                          </label>
+                          <div className="mt-1 flex items-center gap-2">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                onClick={() => setReviewRating(i + 1)}
+                                className={`h-5 w-5 cursor-pointer ${
+                                  i < reviewRating
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-muted-foreground"
+                                }`}
+                              />
+                            ))}
+                            <span className="text-sm text-muted-foreground">
+                              {reviewRating} / 5
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    )}
+                      <Textarea
+                        placeholder="Chia sẻ trải nghiệm của bạn..."
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        className="min-h-[100px]"
+                        disabled={submitting}
+                      />
+                      <div className="flex gap-2">
+                        <Button onClick={submitReview} disabled={submitting}>
+                          {submitting ? "Đang gửi..." : "Gửi đánh giá"}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setReviewOrderId(null)}
+                          disabled={submitting}
+                        >
+                          Hủy
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </Card>

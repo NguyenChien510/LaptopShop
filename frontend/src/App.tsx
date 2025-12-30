@@ -10,6 +10,7 @@ import Test from "./pages/testupload";
 import ForgotPassword from "./components/ForgotPassword";
 import { UserProvider } from "./context/UserContext";
 import { CartProvider } from "./context/CartContext";
+import { ComparisonProvider } from "./context/ComparisonContext";
 import AddProduct from "./pages/admin/AddProduct";
 import AddCoupon from "./pages/admin/AddCoupon";
 import ProductClient from "./pages/ProductClient";
@@ -20,40 +21,49 @@ import ProfilePage from "@/pages/profile";
 import OrdersHistoryPage from "@/pages/orders/History";
 import OrderDetailPage2 from "@/pages/orders/Detail";
 import PaymentCallback from "@/pages/PaymentCallback";
+import ComparisonPage from "@/pages/ComparisonPage";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster position="bottom-right" richColors />
-      <UserProvider>
-        <CartProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/reset" element={<ForgotPassword />} />
-              <Route path="/addproduct" element={<AddProduct />} />
-              <Route path="/addcoupon" element={<AddCoupon />} />
-              <Route path="/products" element={<ProductClient />} />
-              <Route path="/allproducts" element={<ProductClient />} />
-              <Route path="/products/:id" element={<ProductDetailPage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/payment/callback" element={<PaymentCallback />} />
-              <Route path="/profile" element={<ProfilePage />} />
-              <Route path="/orders" element={<OrdersHistoryPage />} />
-              <Route path="/orders/:id" element={<OrderDetailPage2 />} />
-              <Route path="/test" element={<Test />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </CartProvider>
-      </UserProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster position="bottom-right" richColors limit={1} />
+        <UserProvider>
+          <CartProvider>
+            <ComparisonProvider>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/reset" element={<ForgotPassword />} />
+                  <Route path="/addproduct" element={<AddProduct />} />
+                  <Route path="/addcoupon" element={<AddCoupon />} />
+                  <Route path="/products" element={<ProductClient />} />
+                  <Route path="/allproducts" element={<ProductClient />} />
+                  <Route path="/comparison" element={<ComparisonPage />} />
+                  <Route path="/products/:id" element={<ProductDetailPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route
+                    path="/payment/callback"
+                    element={<PaymentCallback />}
+                  />
+                  <Route path="/profile" element={<ProfilePage />} />
+                  <Route path="/orders" element={<OrdersHistoryPage />} />
+                  <Route path="/orders/:id" element={<OrderDetailPage2 />} />
+                  <Route path="/test" element={<Test />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </ComparisonProvider>
+          </CartProvider>
+        </UserProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

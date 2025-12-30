@@ -8,10 +8,12 @@ import {
   MemoryStick,
   HardDrive,
   Monitor,
+  Scale3d,
 } from "lucide-react";
 import type { Product, ShortSpec } from "@/types/product";
 import { useContext } from "react";
 import { CartContext } from "@/context/CartContext";
+import { ComparisonContext } from "@/context/ComparisonContext";
 import { toast } from "sonner";
 
 interface ProductCardProps {
@@ -20,12 +22,18 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const cartContext = useContext(CartContext);
+  const comparisonContext = useContext(ComparisonContext);
 
   if (!cartContext) {
     throw new Error("ProductCard must be used within CartProvider");
   }
 
+  if (!comparisonContext) {
+    throw new Error("ProductCard must be used within ComparisonProvider");
+  }
+
   const { addToCart } = cartContext;
+  const { addToCompare, removeFromCompare, isInComparison } = comparisonContext;
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -62,6 +70,18 @@ const ProductCard = ({ product }: ProductCardProps) => {
     toast.success("Đã thêm vào giỏ hàng!");
   };
 
+  const handleCompare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isInComparison(product.id)) {
+      removeFromCompare(product.id);
+      toast.info("Đã xóa khỏi danh sách so sánh");
+    } else {
+      addToCompare(product);
+      toast.success("Đã thêm vào danh sách so sánh!");
+    }
+  };
+
   return (
     <Card className="group relative overflow-hidden border-0 transition-all duration-500 bg-gradient-card cursor-pointer h-full flex flex-col">
       {/* Gradient Border */}
@@ -86,6 +106,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </Badge>
           )}
         </div>
+
+        {/* Compare Icon */}
+        <button
+          onClick={handleCompare}
+          className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 backdrop-blur-sm ${
+            isInComparison(product.id)
+              ? "bg-blue-500 text-white shadow-lg scale-110"
+              : "bg-black/50 text-white opacity-0 group-hover:opacity-100 hover:bg-blue-500 hover:scale-110"
+          }`}
+          title={isInComparison(product.id) ? "Bỏ so sánh" : "Thêm vào so sánh"}
+        >
+          <Scale3d className="h-4 w-4" />
+        </button>
       </div>
 
       <CardContent className="p-4 space-y-2 flex flex-col flex-grow">

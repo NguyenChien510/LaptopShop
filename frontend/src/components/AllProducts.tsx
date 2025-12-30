@@ -13,8 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Search } from "lucide-react";
+import { Search, Scale3d } from "lucide-react";
 import {
   Pagination,
   PaginationContent,
@@ -80,9 +79,10 @@ const AllProducts = () => {
   const [selectedSSD, setSelectedSSD] = useState<string>("");
   const [sortBy, setSortBy] = useState("price-asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showFilters, setShowFilters] = useState(true);
   const [suggestions, setSuggestions] = useState<Product[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [showFilters, setShowFilters] = useState(true);
 
   const itemsPerPage = 12;
   const maxPrice = 100000000;
@@ -140,8 +140,11 @@ const AllProducts = () => {
 
         const res = await axios.get(url);
         setProducts(res.data);
-      } catch (error) {
+        setError("");
+      } catch (error: any) {
         console.error("Lỗi fetch products:", error);
+        setError(error?.message || "Lỗi tải sản phẩm");
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -667,10 +670,23 @@ const AllProducts = () => {
               Hiển thị {paginatedProducts.length} trong{" "}
               {filteredProducts.length} sản phẩm
             </p>
+            <Link to="/comparison">
+              <Button className="gap-2" variant="default">
+                <Scale3d className="h-4 w-4" />
+                Xem danh sách so sánh
+              </Button>
+            </Link>
           </div>
 
           {/* Products */}
-          {loading ? (
+          {error ? (
+            <div className="text-center py-12 border rounded-md bg-red-50 border-red-200">
+              <p className="text-red-600 text-lg font-semibold">⚠️ {error}</p>
+              <p className="text-red-500 text-sm mt-2">
+                Vui lòng kiểm tra kết nối và thử lại
+              </p>
+            </div>
+          ) : loading ? (
             <div className="text-center py-12">Đang tải sản phẩm...</div>
           ) : paginatedProducts.length === 0 ? (
             <div className="text-center py-12 border rounded-md">
