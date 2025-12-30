@@ -11,6 +11,7 @@ import ForgotPassword from "./components/ForgotPassword";
 import { UserProvider } from "./context/UserContext";
 import { CartProvider } from "./context/CartContext";
 import { ComparisonProvider } from "./context/ComparisonContext";
+import Admin from "./pages/admin/index";
 import AddProduct from "./pages/admin/AddProduct";
 import AddCoupon from "./pages/admin/AddCoupon";
 import ProductClient from "./pages/ProductClient";
@@ -39,6 +40,7 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/reset" element={<ForgotPassword />} />
+                  <Route path="/admin" element={<Admin />} />
                   <Route path="/addproduct" element={<AddProduct />} />
                   <Route path="/addcoupon" element={<AddCoupon />} />
                   <Route path="/products" element={<ProductClient />} />
