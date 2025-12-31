@@ -50,12 +50,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Production: Serve static files & SPA routing (TRƯỚC authMiddleware)
+// Production: Serve static files (TRƯỚC API routes)
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
-  });
 }
 
 // Public routes (không cần auth)
@@ -74,6 +71,13 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/usages", usagesRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
+
+// Production: SPA routing (CUỐI CÙNG, match routes không phải /api)
+if (process.env.NODE_ENV === "production") {
+  app.get(/^(?!\/api).*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  });
+}
 
 // Connect to DB and start server
 connectDB().then(async () => {
