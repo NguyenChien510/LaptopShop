@@ -295,9 +295,11 @@ export const googleCallback = async (req, res) => {
     });
 
     // Redirect về frontend
-    res.redirect("http://localhost:5173");
+    res.redirect(process.env.CLIENT_URL || "http://localhost:5173");
   } catch (error) {
     console.error("Google login error:", error);
-    res.redirect("http://localhost:5001/login?error=google");
+    res.redirect(
+      `${process.env.CLIENT_URL || "http://localhost:5173"}/login?error=google`
+    );
   }
 };

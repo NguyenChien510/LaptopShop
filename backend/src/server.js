@@ -29,14 +29,12 @@ const __dirname = path.resolve();
 
 const app = express();
 // Middleware
-if (process.env.NODE_ENV !== "production") {
-  app.use(
-    cors({
-      origin: "http://localhost:5173", // hoặc domain frontend của bạn
-      credentials: true, // ✅ Cho phép gửi cookie
-    })
-  );
-}
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
