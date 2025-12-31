@@ -50,7 +50,6 @@ const OrdersHistoryPage = () => {
   const [reviewProductId, setReviewProductId] = useState<number | null>(null);
   const [reviewRating, setReviewRating] = useState<number>(0);
   const [reviewText, setReviewText] = useState<string>("");
-  const [hasReviewed, setHasReviewed] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -91,7 +90,6 @@ const OrdersHistoryPage = () => {
     setReviewProductId(productId);
     setReviewRating(0);
     setReviewText("");
-    setHasReviewed(false);
   };
 
   const submitReview = async () => {
@@ -122,7 +120,6 @@ const OrdersHistoryPage = () => {
       if (json.success) {
         toast.success("Đã gửi đánh giá");
         setReviewOrderId(null);
-        setHasReviewed(true);
       } else {
         toast.error(json.message || "Lỗi khi gửi đánh giá");
       }

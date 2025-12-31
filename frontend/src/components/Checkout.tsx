@@ -94,7 +94,6 @@ const Checkout = () => {
               name: item.name,
               price: item.price,
               thumbnail: item.thumbnail,
-              quantity: item.quantity || 1,
             });
           }
         });

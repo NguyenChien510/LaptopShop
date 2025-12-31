@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Upload, X, GripVertical, Save, ImageIcon } from "lucide-react";
+import { X, GripVertical, Save, ImageIcon } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -170,9 +170,7 @@ const EditProduct = () => {
   const [usages, setUsages] = useState<UsageOption[]>([]);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      distance: 8,
-    }),
+    useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })

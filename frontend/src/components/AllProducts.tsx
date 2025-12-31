@@ -82,7 +82,7 @@ const AllProducts = () => {
   const [suggestions, setSuggestions] = useState<Product[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [error, setError] = useState<string>("");
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters] = useState(true);
 
   const itemsPerPage = 12;
   const maxPrice = 100000000;

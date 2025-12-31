@@ -104,8 +104,6 @@ const topProducts = [
   { name: "Laptop Workstation", sales: 54, revenue: 242900000 },
 ];
 
-type ProductType = Product;
-
 interface Coupon {
   id: number;
   code: string;
@@ -144,8 +142,6 @@ const Admin = () => {
   const [searchOrder, setSearchOrder] = useState("");
   const [searchProduct, setSearchProduct] = useState("");
   const [searchCoupon, setSearchCoupon] = useState("");
-  const [loadingProducts, setLoadingProducts] = useState(false);
-  const [loadingCoupons, setLoadingCoupons] = useState(false);
   const [loadingOrders, setLoadingOrders] = useState(false);
 
   // Statistics data
@@ -160,11 +156,10 @@ const Admin = () => {
     topProducts: topProducts,
     usageDistribution: [],
   });
-  const [loadingStats, setLoadingStats] = useState(false);
 
   // Product dialog state
   const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [editingProduct] = useState<any>(null);
   const [productForm, setProductForm] = useState({
     name: "",
     price: "",
@@ -174,7 +169,7 @@ const Admin = () => {
 
   // Coupon dialog state
   const [isCouponDialogOpen, setIsCouponDialogOpen] = useState(false);
-  const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
+  const [editingCoupon] = useState<Coupon | null>(null);
   const [couponForm, setCouponForm] = useState({
     code: "",
     discount: "",
@@ -213,7 +208,6 @@ const Admin = () => {
 
   const fetchStatistics = async () => {
     try {
-      setLoadingStats(true);
       const response = await api.get(`/statistics/dashboard`);
       if (response.data.success) {
         setStatsData(response.data.data);
@@ -221,14 +215,11 @@ const Admin = () => {
     } catch (error) {
       console.error("Lỗi khi lấy thống kê:", error);
       // Sử dụng dữ liệu mock nếu API lỗi
-    } finally {
-      setLoadingStats(false);
     }
   };
 
   const fetchProducts = async () => {
     try {
-      setLoadingProducts(true);
       const response = await api.get(`/products`);
       if (response.data.success && Array.isArray(response.data.data)) {
         setProductList(response.data.data);
@@ -238,14 +229,11 @@ const Admin = () => {
     } catch (error) {
       console.error("Lỗi khi lấy sản phẩm:", error);
       toast.error("Không thể tải danh sách sản phẩm");
-    } finally {
-      setLoadingProducts(false);
     }
   };
 
   const fetchCoupons = async () => {
     try {
-      setLoadingCoupons(true);
       const response = await api.get(`/coupons`);
       if (response.data.success && Array.isArray(response.data.data)) {
         setCoupons(response.data.data);
@@ -254,8 +242,6 @@ const Admin = () => {
       }
     } catch (error) {
       console.error("Lỗi khi lấy mã giảm giá:", error);
-    } finally {
-      setLoadingCoupons(false);
     }
   };
 
@@ -330,26 +316,6 @@ const Admin = () => {
   }));
 
   // Product CRUD
-  const handleOpenProductDialog = (product?: any) => {
-    if (product) {
-      setEditingProduct(product);
-      setProductForm({
-        name: product.name,
-        price: product.price.toString(),
-        stock: product.stock.toString(),
-        thumbnail: product.thumbnail,
-      });
-    } else {
-      setEditingProduct(null);
-      setProductForm({
-        name: "",
-        price: "",
-        stock: "",
-        thumbnail: "",
-      });
-    }
-    setIsProductDialogOpen(true);
-  };
 
   const handleSaveProduct = async () => {
     if (!productForm.name || !productForm.price) {
@@ -395,24 +361,6 @@ const Admin = () => {
   };
 
   // Coupon CRUD
-  const handleOpenCouponDialog = (coupon?: Coupon) => {
-    if (coupon) {
-      setEditingCoupon(coupon);
-      setCouponForm({
-        code: coupon.code,
-        discount: coupon.discount.toString(),
-        expiresAt: coupon.expiresAt.split("T")[0],
-      });
-    } else {
-      setEditingCoupon(null);
-      setCouponForm({
-        code: "",
-        discount: "",
-        expiresAt: "",
-      });
-    }
-    setIsCouponDialogOpen(true);
-  };
 
   const handleSaveCoupon = async () => {
     if (!couponForm.code || !couponForm.discount || !couponForm.expiresAt) {
@@ -1372,7 +1320,6 @@ const Admin = () => {
                   ? handleDeleteProduct
                   : handleDeleteCoupon
               }
-              className="cursor-pointer"
               className="cursor-pointer"
             >
               Xóa

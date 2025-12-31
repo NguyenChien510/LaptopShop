@@ -33,7 +33,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster position="bottom-right" richColors limit={1} />
+        <Toaster position="bottom-right" richColors />
         <UserProvider>
           <CartProvider>
             <ComparisonProvider>

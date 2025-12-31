@@ -20,19 +20,23 @@ import passport from "./config/passport.js";
 import session from "express-session";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 import "./models/Associations.js";
+import path from "path";
 
 import { seed } from "./seed.js";
 
 const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve();
 
 const app = express();
 // Middleware
-app.use(
-  cors({
-    origin: "http://localhost:5173", // hoặc domain frontend của bạn
-    credentials: true, // ✅ Cho phép gửi cookie
-  })
-);
+if (process.env.NODE_ENV !== "production") {
+  app.use(
+    cors({
+      origin: "http://localhost:5173", // hoặc domain frontend của bạn
+      credentials: true, // ✅ Cho phép gửi cookie
+    })
+  );
+}
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
@@ -48,39 +52,6 @@ app.use(passport.session());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
-});
-
-// Debug endpoint - kiểm tra series trong database
-app.get("/debug/series", async (req, res) => {
-  try {
-    const Series = (await import("./models/Series.js")).default;
-    const allSeries = await Series.findAll();
-    res.json({
-      total: allSeries.length,
-      series: allSeries.map((s) => ({ id: s.id, name: s.name })),
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Debug endpoint - test raw SQL insert
-app.post("/debug/test-insert", async (req, res) => {
-  try {
-    const { name, price, seriesId, brandId } = req.body;
-    const result = await sequelize.query(
-      `INSERT INTO Products (name, price, stock, sold, sale, rateCount, sumRate, thumbnail, images, shortSpecs, detailSpecs, brandId, seriesId, createdAt, updatedAt)
-       VALUES (?, ?, 0, 0, 0, 0, 0, 'test.jpg', '[]', '[]', '[]', ?, ?, NOW(), NOW())`,
-      {
-        replacements: [name, price, brandId || null, seriesId || null],
-        type: sequelize.QueryTypes.INSERT,
-      }
-    );
-    res.json({ success: true, message: "Raw SQL insert works", result });
-  } catch (err) {
-    console.log("[DEBUG TEST INSERT] Error:", err.message);
-    res.status(500).json({ error: err.message });
-  }
 });
 
 // Public routes (không cần auth)
@@ -99,6 +70,13 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/usages", usagesRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  });
+}
 
 // Connect to DB and start server
 connectDB().then(async () => {

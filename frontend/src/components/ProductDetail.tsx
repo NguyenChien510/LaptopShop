@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Textarea } from "@/components/ui/textarea";
+
 import {
   Star,
   ShoppingCart,
@@ -35,8 +35,6 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
 }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [ratingInput, setRatingInput] = useState(0);
-  const [newComment, setNewComment] = useState("");
   const cartContext = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -283,7 +281,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           <div className="space-y-3">
             <h3 className="font-semibold text-lg">Cấu hình nổi bật</h3>
             <ul className="space-y-3">
-              {product.shortSpecs.map((s) => (
+              {product.shortSpecs?.map((s) => (
                 <li
                   key={s.id}
                   className="flex items-start gap-3 text-sm p-2 bg-blue-50 dark:bg-blue-900/10 hover:bg-blue-100 dark:hover:bg-blue-900/20 rounded-md transition-colors"
@@ -369,7 +367,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
       <Card>
         <CardContent className="p-4 space-y-4">
           <h2 className="text-xl font-bold">Thông số kỹ thuật chi tiết</h2>
-          {product.detailSpecs.map((d) => (
+          {product.detailSpecs?.map((d) => (
             <div
               key={d.id}
               className="flex justify-between text-sm border-b pb-2 hover:bg-muted/30 px-2 rounded transition-colors"

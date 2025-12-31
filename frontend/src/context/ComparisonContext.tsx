@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, type ReactNode } from "react";
 import type { Product } from "@/types/product";
 
 interface ComparisonContextType {
