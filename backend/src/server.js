@@ -50,10 +50,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 // Public routes (không cần auth)
 app.use("/api/auth", authRoutes);
 app.use("/api/coupons", couponRoutes);
