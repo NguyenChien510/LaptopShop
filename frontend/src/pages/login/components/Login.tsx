@@ -127,9 +127,11 @@ export function LoginForm({
               <button
                 type="button"
                 onClick={() => {
-                  window.location.href =
-                    "http://localhost:5001/api/auth/google";
-                  // backend của bạn chạy ở cổng 5001
+                  const apiUrl =
+                    import.meta.env.MODE === "development"
+                      ? "http://localhost:5001/api/auth/google"
+                      : "/api/auth/google";
+                  window.location.href = apiUrl;
                 }}
                 className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white border border-gray-300 rounded-md shadow-sm hover:shadow-glow transition-shadow duration-200 cursor-pointer"
               >
