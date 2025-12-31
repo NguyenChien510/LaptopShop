@@ -75,17 +75,15 @@ View order history
 🖼️ UI/UX Screenshots
 🏠 Home Page – Laptop Listing
 
-Clean and responsive interface
+![Home Page](./img/home1.png)
+![Home Page](./img/home2.png)
+![Home Page](./img/home3.png)
 
-Displays laptops with filters by brand, price, and specifications
+📄 Laptop Detail Page & All Products
+![Home Page](./img/products.png)
+![Home Page](./img/productdetail.png)
+![Home Page](./img/specandreview.png)
 
-📄 Laptop Detail Page
-
-Shows full laptop specifications
-
-High-quality images
-
-Price, stock status, and purchase options
 
 📊 Laptop Comparison Page
 
@@ -93,11 +91,10 @@ Side-by-side comparison table
 
 Highlights differences between selected laptops
 
-🛒 Shopping Cart
+🛒 Order
 
-Review selected laptops before checkout
-
-Real-time price updates
+![Home Page](./img/order.png)
+![Home Page](./img/orderdetail.png)
 
 💳 VNPay Payment Page
 
@@ -106,8 +103,10 @@ Secure online payment flow
 Clear transaction status feedback
 
 📊 Admin Dashboard
-
-Overview of total orders, revenue, and best-selling laptops
+![Home Page](./img/static.png)
+![Home Page](./img/productmanager.png)
+![Home Page](./img/couponmanager.png)
+![Home Page](./img/ordermanager.png)
 
 🚀 Technologies Used
 
