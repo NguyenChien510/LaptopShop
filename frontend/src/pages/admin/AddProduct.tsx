@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import axios from "@/lib/axios";
 import type { DragEndEvent } from "@dnd-kit/core";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowLeft } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Upload, X, GripVertical, Save, ImageIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   DndContext,
   closestCenter,
@@ -122,6 +123,7 @@ const SortableImage = ({
 };
 
 const AddProduct = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<ImageItem[]>([]);
   const [dragActive, setDragActive] = useState(false);
@@ -456,7 +458,7 @@ const AddProduct = () => {
                       type="button"
                       variant={selected ? "default" : "outline"}
                       onClick={() => toggleUsage(option.id)}
-                      className="rounded-full px-3 py-1 text-sm"
+                      className="cursor-pointer rounded-full px-3 py-1 text-sm"
                     >
                       {option.name}
                     </Button>
@@ -647,7 +649,16 @@ const AddProduct = () => {
         <Separator />
 
         {/* Submit */}
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/admin")}
+            disabled={loading}
+            className="cursor-pointer"
+          >
+            Hủy
+          </Button>
           <Button type="submit" size="lg" className="px-8 cursor-pointer">
             <Save className="h-4 w-4 mr-2" /> Lưu sản phẩm
           </Button>

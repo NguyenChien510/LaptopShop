@@ -26,9 +26,13 @@ import { useNavigate } from "react-router-dom";
 
 interface ProductDetailProps {
   product: Product;
+  reviews?: any[];
 }
 
-export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
+export const ProductDetail: React.FC<ProductDetailProps> = ({
+  product,
+  reviews = [],
+}) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [ratingInput, setRatingInput] = useState(0);
@@ -374,6 +378,75 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({ product }) => {
               <span className="text-foreground">{d.value}</span>
             </div>
           ))}
+        </CardContent>
+      </Card>
+
+      {/* ================= REVIEWS ================= */}
+      <Card>
+        <CardContent className="p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold">Đánh giá từ khách hàng</h2>
+            <Badge variant="secondary" className="text-sm">
+              {reviews.length} đánh giá
+            </Badge>
+          </div>
+
+          {reviews.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <MessageCircle className="mx-auto h-12 w-12 mb-2 opacity-50" />
+              <p>Chưa có đánh giá nào cho sản phẩm này</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {reviews.map((review: any) => (
+                <div
+                  key={review.id}
+                  className="border rounded-lg p-4 hover:bg-muted/30 transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      {review.User?.image ? (
+                        <img
+                          src={review.User.image}
+                          alt={review.User.name}
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-sm font-semibold text-primary">
+                            {review.User?.name?.charAt(0).toUpperCase() || "?"}
+                          </span>
+                        </div>
+                      )}
+                      <div>
+                        <p className="font-medium">
+                          {review.User?.name || "Người dùng"}
+                        </p>
+                        <div className="flex items-center gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < review.rating
+                                  ? "fill-yellow-400 text-yellow-400"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-sm text-muted-foreground">
+                      {new Date(review.createdAt).toLocaleDateString("vi-VN")}
+                    </span>
+                  </div>
+                  <p className="text-sm text-foreground mt-2">
+                    {review.comment}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 

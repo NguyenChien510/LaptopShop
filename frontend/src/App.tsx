@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Home from "./pages/home/index";
 import Login from "./pages/login/index";
 import Signup from "./pages/login/components/Signup";
@@ -13,7 +14,9 @@ import { CartProvider } from "./context/CartContext";
 import { ComparisonProvider } from "./context/ComparisonContext";
 import Admin from "./pages/admin/index";
 import AddProduct from "./pages/admin/AddProduct";
+import EditProduct from "./pages/admin/EditProduct";
 import AddCoupon from "./pages/admin/AddCoupon";
+import EditCoupon from "./pages/admin/EditCoupon";
 import ProductClient from "./pages/ProductClient";
 import ProductDetailPage from "./components/ProductDetailPage";
 import CartPage from "./pages/Cart";
@@ -40,9 +43,26 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/reset" element={<ForgotPassword />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/addproduct" element={<AddProduct />} />
-                  <Route path="/addcoupon" element={<AddCoupon />} />
+                  <Route
+                    path="/admin"
+                    element={<ProtectedRoute element={<Admin />} />}
+                  />
+                  <Route
+                    path="/addproduct"
+                    element={<ProtectedRoute element={<AddProduct />} />}
+                  />
+                  <Route
+                    path="/editproduct/:id"
+                    element={<ProtectedRoute element={<EditProduct />} />}
+                  />
+                  <Route
+                    path="/addcoupon"
+                    element={<ProtectedRoute element={<AddCoupon />} />}
+                  />
+                  <Route
+                    path="/editcoupon/:id"
+                    element={<ProtectedRoute element={<EditCoupon />} />}
+                  />
                   <Route path="/products" element={<ProductClient />} />
                   <Route path="/allproducts" element={<ProductClient />} />
                   <Route path="/comparison" element={<ComparisonPage />} />

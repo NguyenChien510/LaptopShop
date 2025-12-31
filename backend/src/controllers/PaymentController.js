@@ -1,6 +1,8 @@
 import { VNPay } from "vnpay";
 import { v4 as uuidv4 } from "uuid";
 import Order from "../models/Order.js";
+import OrderItem from "../models/OrderItem.js";
+import Product from "../models/Product.js";
 
 const vnpay = new VNPay({
   tmnCode: process.env.VNP_TMN_CODE || "123",
@@ -90,6 +92,21 @@ export const handlePaymentCallback = async (req, res) => {
         paymentStatus: "completed",
         transactionId: vnpParams.vnp_TransactionNo,
       });
+
+      // Update product sold and stock
+      const orderItems = await OrderItem.findAll({
+        where: { orderId: order.id },
+      });
+
+      for (const item of orderItems) {
+        const product = await Product.findByPk(item.productId);
+        if (product) {
+          await product.update({
+            sold: (product.sold || 0) + item.quantity,
+            stock: Math.max(0, (product.stock || 0) - item.quantity),
+          });
+        }
+      }
 
       return res.json({
         success: true,

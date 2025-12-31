@@ -110,7 +110,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Compare Icon */}
         <button
           onClick={handleCompare}
-          className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 backdrop-blur-sm ${
+          className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 backdrop-blur-sm cursor-pointer ${
             isInComparison(product.id)
               ? "bg-blue-500 text-white shadow-lg scale-110"
               : "bg-black/50 text-white opacity-0 group-hover:opacity-100 hover:bg-blue-500 hover:scale-110"

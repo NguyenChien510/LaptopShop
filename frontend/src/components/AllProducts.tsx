@@ -655,7 +655,7 @@ const AllProducts = () => {
               <Button
                 variant="outline"
                 onClick={clearFilters}
-                className="w-full mt-4"
+                className="w-full mt-4 cursor-pointer"
               >
                 Xóa bộ lọc
               </Button>
@@ -671,7 +671,7 @@ const AllProducts = () => {
               {filteredProducts.length} sản phẩm
             </p>
             <Link to="/comparison">
-              <Button className="gap-2" variant="default">
+              <Button className="gap-2 cursor-pointer" variant="default">
                 <Scale3d className="h-4 w-4" />
                 Xem danh sách so sánh
               </Button>

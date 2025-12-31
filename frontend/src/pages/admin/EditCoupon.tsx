@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,16 +7,48 @@ import { Separator } from "@/components/ui/separator";
 import axios from "@/lib/axios";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const AddCoupon = () => {
+const EditCoupon = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const { id } = useParams<{ id: string }>();
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     code: "",
     discount: "",
     expiresAt: "",
   });
+
+  // Load coupon data on mount
+  useEffect(() => {
+    if (id) {
+      fetchCoupon(id);
+    }
+  }, [id]);
+
+  const fetchCoupon = async (couponId: string) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`/coupons/${couponId}`);
+      if (response.data.success) {
+        const coupon = response.data.data;
+        setFormData({
+          code: coupon.code,
+          discount: coupon.discount.toString(),
+          expiresAt: coupon.expiresAt.split("T")[0], // Format date for input
+        });
+      } else {
+        toast.error("Không tìm thấy mã giảm giá");
+        navigate("/admin");
+      }
+    } catch (error: any) {
+      console.error("Error fetching coupon:", error);
+      toast.error("Không thể tải thông tin mã giảm giá");
+      navigate("/admin");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -59,32 +91,39 @@ const AddCoupon = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post("/coupons/add", {
+      const res = await axios.put(`/coupons/${id}`, {
         code: formData.code.toUpperCase(),
         discount: discount,
         expiresAt: formData.expiresAt,
       });
 
       if (res.data.success) {
-        toast.success("Tạo mã giảm giá thành công!");
-        // Reset form
-        setFormData({
-          code: "",
-          discount: "",
-          expiresAt: "",
-        });
-        // Navigate back after 1 second
+        toast.success("Cập nhật mã giảm giá thành công!");
+        // Navigate back to admin after 1 second
         setTimeout(() => {
           navigate("/admin");
         }, 1000);
       }
     } catch (err: any) {
-      console.error("Error creating coupon:", err);
-      toast.error(err.response?.data?.message || "Lỗi khi tạo mã giảm giá");
+      console.error("Error updating coupon:", err);
+      toast.error(
+        err.response?.data?.message || "Lỗi khi cập nhật mã giảm giá"
+      );
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+          <p className="text-muted-foreground">Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -99,7 +138,9 @@ const AddCoupon = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-3xl font-bold text-primary">Tạo Mã Giảm Giá</h1>
+          <h1 className="text-3xl font-bold text-primary">
+            Chỉnh Sửa Mã Giảm Giá
+          </h1>
         </div>
 
         <Card>
@@ -219,12 +260,12 @@ const AddCoupon = () => {
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      Đang tạo...
+                      Đang cập nhật...
                     </>
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      Tạo Mã Giảm Giá
+                      Cập Nhật Mã Giảm Giá
                     </>
                   )}
                 </Button>
@@ -246,4 +287,4 @@ const AddCoupon = () => {
   );
 };
 
-export default AddCoupon;
+export default EditCoupon;

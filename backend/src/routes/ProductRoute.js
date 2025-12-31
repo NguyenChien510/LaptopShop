@@ -1,4 +1,6 @@
 import express from "express";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import { authorizeRoles } from "../middleware/authorizeMiddleware.js";
 import {
   createProduct,
   deleteProduct,
@@ -13,11 +15,11 @@ const router = express.Router();
 router.get("", getAllProducts);
 router.get("/search", searchProducts);
 
-router.post("/add", createProduct);
+router.post("/add", authMiddleware, authorizeRoles("admin"), createProduct);
 router.get("/:id", getProductById);
 
-router.put("/:id", updateProduct);
+router.put("/:id", authMiddleware, authorizeRoles("admin"), updateProduct);
 
-router.delete("/:id", deleteProduct);
+router.delete("/:id", authMiddleware, authorizeRoles("admin"), deleteProduct);
 
 export default router;

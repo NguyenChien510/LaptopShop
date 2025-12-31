@@ -50,6 +50,21 @@ export const createReview = async (req, res) => {
       comment,
     });
 
+    // Update product rating
+    const allReviews = await Review.findAll({
+      where: { productId },
+    });
+    const totalRating = allReviews.reduce((sum, r) => sum + r.rating, 0);
+    const reviewCount = allReviews.length;
+
+    await Product.update(
+      {
+        sumRate: totalRating,
+        rateCount: reviewCount,
+      },
+      { where: { id: productId } }
+    );
+
     res.status(201).json({
       success: true,
       message: "Đánh giá đã được gửi",
@@ -71,7 +86,7 @@ export const getProductReviews = async (req, res) => {
 
     const reviews = await Review.findAll({
       where: { productId },
-      include: [{ model: User, attributes: ["id", "username", "email"] }],
+      include: [{ model: User, attributes: ["id", "name", "email", "image"] }],
       order: [["createdAt", "DESC"]],
     });
 
@@ -80,10 +95,11 @@ export const getProductReviews = async (req, res) => {
       data: reviews,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error fetching reviews:", err);
     res.status(500).json({
       success: false,
       message: "Lỗi khi lấy đánh giá",
+      error: process.env.NODE_ENV === "development" ? err.message : undefined,
     });
   }
 };

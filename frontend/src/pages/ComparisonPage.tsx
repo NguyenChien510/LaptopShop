@@ -203,6 +203,7 @@ const ComparisonPage = () => {
                     variant="destructive"
                     size="sm"
                     onClick={handleClearAll}
+                    className="cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4 mr-1" />
                     Xóa tất cả
@@ -225,7 +226,11 @@ const ComparisonPage = () => {
                 Hãy chọn ít nhất 2 sản phẩm từ danh sách bên trên để bắt đầu so
                 sánh
               </p>
-              <Button onClick={() => navigate("/products")} variant="default">
+              <Button
+                onClick={() => navigate("/products")}
+                variant="default"
+                className="cursor-pointer"
+              >
                 Xem danh sách sản phẩm
               </Button>
             </CardContent>
@@ -248,7 +253,7 @@ const ComparisonPage = () => {
                       <Button
                         variant="destructive"
                         size="icon"
-                        className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7"
+                        className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity w-7 h-7 cursor-pointer"
                         onClick={() => handleRemoveProduct(product.id)}
                       >
                         <X className="w-4 h-4" />
@@ -268,7 +273,7 @@ const ComparisonPage = () => {
                           {formatPrice(product.price)}
                         </p>
                         <Button
-                          className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                          className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg cursor-pointer"
                           size="sm"
                           onClick={() => handleAddToCart(product)}
                         >

@@ -384,11 +384,18 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="flex gap-3 pt-4">
-                    <Button onClick={handleSave} className="flex-1">
+                    <Button
+                      onClick={handleSave}
+                      className="flex-1 cursor-pointer"
+                    >
                       <Save className="h-4 w-4 mr-2" />
                       Lưu thay đổi
                     </Button>
-                    <Button variant="outline" onClick={handleCancel}>
+                    <Button
+                      variant="outline"
+                      onClick={handleCancel}
+                      className="cursor-pointer"
+                    >
                       <X className="h-4 w-4 mr-2" />
                       Hủy
                     </Button>
@@ -465,7 +472,7 @@ const ProfilePage = () => {
                   <Button
                     onClick={() => setIsEditing(true)}
                     variant="outline"
-                    className="w-full mt-4"
+                    className="w-full mt-4 cursor-pointer"
                   >
                     <Edit2 className="h-4 w-4 mr-2" />
                     Chỉnh sửa thông tin

@@ -35,7 +35,12 @@ const OrderDetailPage = () => {
           <Card>
             <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <CardTitle>Đơn hàng #{order.id}</CardTitle>
-              <Button variant="outline" size="sm" asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="cursor-pointer"
+              >
                 <Link to="/orders">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Quay lại danh sách

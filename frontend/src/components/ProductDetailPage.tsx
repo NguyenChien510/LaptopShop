@@ -10,29 +10,31 @@ const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get<Product>(`/products/${id}`);
-        const data = res.data;
+        const res = await axios.get(`/products/${id}`);
+        // Handle both formats: direct data or {success, data}
+        const productData = res.data.data ? res.data.data : res.data;
 
         setProduct({
-          ...data,
+          ...productData,
           images:
-            typeof data.images === "string"
-              ? JSON.parse(data.images)
-              : data.images ?? [],
+            typeof productData.images === "string"
+              ? JSON.parse(productData.images)
+              : productData.images ?? [],
 
           shortSpecs:
-            typeof data.shortSpecs === "string"
-              ? JSON.parse(data.shortSpecs)
-              : data.shortSpecs ?? [],
+            typeof productData.shortSpecs === "string"
+              ? JSON.parse(productData.shortSpecs)
+              : productData.shortSpecs ?? [],
 
           detailSpecs:
-            typeof data.detailSpecs === "string"
-              ? JSON.parse(data.detailSpecs)
-              : data.detailSpecs ?? [],
+            typeof productData.detailSpecs === "string"
+              ? JSON.parse(productData.detailSpecs)
+              : productData.detailSpecs ?? [],
         });
       } catch (error) {
         console.error("Lỗi fetch product:", error);
@@ -41,7 +43,21 @@ const ProductDetailPage = () => {
       }
     };
 
-    if (id) fetchProduct();
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get(`/reviews/product/${id}`);
+        if (res.data.success) {
+          setReviews(res.data.data || []);
+        }
+      } catch (error) {
+        console.error("Lỗi fetch reviews:", error);
+      }
+    };
+
+    if (id) {
+      fetchProduct();
+      fetchReviews();
+    }
   }, [id]);
 
   if (loading) return <div>Loading...</div>;
@@ -52,7 +68,7 @@ const ProductDetailPage = () => {
       <Header />
 
       <main className="flex-1">
-        <ProductDetail product={product} />
+        <ProductDetail product={product} reviews={reviews} />
       </main>
 
       <Footer />

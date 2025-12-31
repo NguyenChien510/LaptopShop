@@ -52,7 +52,9 @@ function ImageUpload() {
           ))}
         </div>
       )}
-      <button onClick={handleUpload}>Upload</button>
+      <button onClick={handleUpload} className="cursor-pointer">
+        Upload
+      </button>
       {uploadedUrls.length > 0 && (
         <div style={{ marginTop: "10px" }}>
           <p>Ảnh đã upload:</p>

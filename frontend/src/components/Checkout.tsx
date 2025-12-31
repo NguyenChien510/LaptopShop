@@ -475,13 +475,16 @@ const Checkout = () => {
 
             <Button
               type="submit"
-              className="w-full h-12 text-base font-semibold"
+              className="w-full h-12 text-base font-semibold cursor-pointer"
             >
               Xác nhận đặt hàng
             </Button>
 
             <Link to="/cart">
-              <Button variant="outline" className="w-full h-12 text-base">
+              <Button
+                variant="outline"
+                className="w-full h-12 text-base cursor-pointer"
+              >
                 Quay lại giỏ hàng
               </Button>
             </Link>

@@ -61,9 +61,18 @@ export const createOrder = async (req, res) => {
       total,
     });
 
-    // Create items
+    // Create items and update product sold/stock
     for (const pi of preparedItems) {
       await OrderItem.create({ ...pi, orderId: order.id });
+
+      // Update product sold and stock
+      const product = await Product.findByPk(pi.productId);
+      if (product) {
+        await product.update({
+          sold: (product.sold || 0) + pi.quantity,
+          stock: Math.max(0, (product.stock || 0) - pi.quantity),
+        });
+      }
     }
 
     const fullOrder = await Order.findByPk(order.id, {
@@ -147,5 +156,24 @@ export const cancelOrder = async (req, res) => {
     res.json({ success: true, data: order });
   } catch (err) {
     res.status(500).json({ success: false, message: "Cancel order error" });
+  }
+};
+
+// Admin: Get all orders
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.findAll({
+      include: [
+        {
+          model: OrderItem,
+          as: "OrderItems",
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+    res.json({ success: true, data: orders });
+  } catch (err) {
+    console.error("Get all orders error:", err);
+    res.status(500).json({ success: false, message: "Get all orders error" });
   }
 };

@@ -128,7 +128,7 @@ const Cart = () => {
                 Giỏ hàng trống
               </p>
               <Link to="/products">
-                <Button>Tiếp tục mua sắm</Button>
+                <Button className="cursor-pointer">Tiếp tục mua sắm</Button>
               </Link>
             </div>
           ) : (

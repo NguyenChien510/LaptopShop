@@ -85,7 +85,7 @@ const ComparisonTable = ({ isOpen, onOpenChange }: ComparisonTableProps) => {
           <DialogFooter>
             <Button
               onClick={() => onOpenChange(false)}
-              className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+              className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 cursor-pointer"
             >
               Đóng
             </Button>
@@ -130,7 +130,7 @@ const ComparisonTable = ({ isOpen, onOpenChange }: ComparisonTableProps) => {
                     />
                     <button
                       onClick={() => removeFromCompare(product.id)}
-                      className="absolute top-2 right-2 p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-full transition-colors"
+                      className="absolute top-2 right-2 p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-full transition-colors cursor-pointer"
                       title="Xóa khỏi danh sách so sánh"
                     >
                       <X className="h-4 w-4" />
@@ -237,13 +237,13 @@ const ComparisonTable = ({ isOpen, onOpenChange }: ComparisonTableProps) => {
               clearComparison();
               onOpenChange(false);
             }}
-            className="border-slate-600 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+            className="border-slate-600 text-slate-400 hover:bg-slate-800 hover:text-slate-200 cursor-pointer"
           >
             Xóa tất cả
           </Button>
           <Button
             onClick={() => onOpenChange(false)}
-            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 cursor-pointer"
           >
             Đóng
           </Button>

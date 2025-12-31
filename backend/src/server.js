@@ -14,6 +14,8 @@ import orderRoutes from "./routes/OrderRoute.js";
 import reviewRoutes from "./routes/ReviewRoute.js";
 import couponRoutes from "./routes/CouponRoute.js";
 import paymentRoutes from "./routes/PaymentRoute.js";
+import statisticsRoutes from "./routes/StatisticsRoute.js";
+import adminRoutes from "./routes/AdminRoute.js";
 import passport from "./config/passport.js";
 import session from "express-session";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -86,6 +88,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/coupons", couponRoutes);
 app.use("/api/reviews", reviewRoutes); // Public read, protected write
 app.use("/api/payment", paymentRoutes); // Payment routes (create auth, callback/ipn public)
+app.use("/api/statistics", statisticsRoutes); // Statistics (có thể public hoặc protected tùy yêu cầu)
 
 // Protected routes (cần auth)
 app.use(authMiddleware);
@@ -95,6 +98,7 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/usages", usagesRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Connect to DB and start server
 connectDB().then(async () => {

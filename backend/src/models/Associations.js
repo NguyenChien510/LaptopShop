@@ -6,6 +6,7 @@ import User from "./User.js";
 import Order from "./Order.js";
 import OrderItem from "./OrderItem.js";
 import Review from "./Review.js";
+import Coupon from "./Coupon.js";
 
 // Brand - Series
 Brand.hasMany(Series, { foreignKey: "brandId" });
@@ -31,7 +32,17 @@ Usage.belongsToMany(Product, {
   onDelete: "CASCADE",
 });
 
-export { Brand, Series, Usage, Product, User, Order, OrderItem, Review };
+export {
+  Brand,
+  Series,
+  Usage,
+  Product,
+  User,
+  Order,
+  OrderItem,
+  Review,
+  Coupon,
+};
 
 // User - Order
 User.hasMany(Order, { foreignKey: "userId", onDelete: "CASCADE" });

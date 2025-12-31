@@ -111,14 +111,14 @@ export default function PaymentCallback() {
               <div className="space-y-2">
                 <Button
                   onClick={handleViewOrder}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   variant="default"
                 >
                   Xem chi tiết đơn hàng
                 </Button>
                 <Button
                   onClick={handleReturnHome}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   variant="outline"
                 >
                   Quay lại trang chủ
@@ -137,7 +137,7 @@ export default function PaymentCallback() {
               <div className="space-y-2">
                 <Button
                   onClick={handleRetryPayment}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   variant="default"
                   disabled={!orderId}
                 >
@@ -145,7 +145,7 @@ export default function PaymentCallback() {
                 </Button>
                 <Button
                   onClick={handleReturnHome}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   variant="outline"
                 >
                   Quay lại trang chủ

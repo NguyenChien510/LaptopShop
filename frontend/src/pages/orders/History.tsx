@@ -179,7 +179,7 @@ const OrdersHistoryPage = () => {
             <p className="text-muted-foreground mb-4">
               Bắt đầu mua sắm để xem lịch sử đơn hàng của bạn
             </p>
-            <Button asChild>
+            <Button asChild className="cursor-pointer">
               <Link to="/products">Mua sắm ngay</Link>
             </Button>
           </Card>
@@ -250,7 +250,12 @@ const OrdersHistoryPage = () => {
                       </span>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className="cursor-pointer"
+                      >
                         <Link to={`/orders/${order.id}`}>
                           <Eye className="h-4 w-4 mr-2" />
                           Chi tiết
@@ -261,6 +266,7 @@ const OrdersHistoryPage = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => openReview(order)}
+                          className="cursor-pointer"
                         >
                           <Star className="h-4 w-4 mr-2" />
                           Đánh giá
@@ -271,6 +277,7 @@ const OrdersHistoryPage = () => {
                           variant="outline"
                           size="sm"
                           onClick={() => handleRepurchase(order)}
+                          className="cursor-pointer"
                         >
                           <RotateCcw className="h-4 w-4 mr-2" />
                           Mua lại
@@ -336,13 +343,18 @@ const OrdersHistoryPage = () => {
                         disabled={submitting}
                       />
                       <div className="flex gap-2">
-                        <Button onClick={submitReview} disabled={submitting}>
+                        <Button
+                          onClick={submitReview}
+                          disabled={submitting}
+                          className="cursor-pointer"
+                        >
                           {submitting ? "Đang gửi..." : "Gửi đánh giá"}
                         </Button>
                         <Button
                           variant="outline"
                           onClick={() => setReviewOrderId(null)}
                           disabled={submitting}
+                          className="cursor-pointer"
                         >
                           Hủy
                         </Button>

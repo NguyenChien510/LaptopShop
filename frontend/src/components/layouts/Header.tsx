@@ -252,6 +252,17 @@ const Header = () => {
                       <ShoppingBag className="w-4 h-4 text-gray-500 group-hover:text-orange-500 transition-colors" />
                       <span>Lịch sử đơn hàng</span>
                     </Link>
+                    {user.role === "admin" && (
+                      <Link
+                        to="/admin"
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 transition-all duration-200 group border-t border-gray-200"
+                      >
+                        <span className="w-4 h-4 text-gray-500 group-hover:text-purple-500 transition-colors font-bold">
+                          ⚙️
+                        </span>
+                        <span>ADMIN</span>
+                      </Link>
+                    )}
                     <button
                       className="flex items-center gap-2 w-full px-4 py-2 hover:bg-gray-100 transition-all duration-200 group cursor-pointer"
                       onClick={handleLogout}
