@@ -204,10 +204,6 @@ const ProfilePage = () => {
     );
   }
 
-  const availableDistricts = editForm.city
-    ? districts[editForm.city] || []
-    : [];
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -358,7 +354,10 @@ const ProfilePage = () => {
                             <SelectValue placeholder="Chọn quận/huyện" />
                           </SelectTrigger>
                           <SelectContent>
-                            {availableDistricts.map((district) => (
+                            {(editForm.city
+                              ? districts[editForm.city] || []
+                              : []
+                            ).map((district) => (
                               <SelectItem key={district} value={district}>
                                 {district}
                               </SelectItem>

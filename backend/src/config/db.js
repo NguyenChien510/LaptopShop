@@ -2,29 +2,28 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Nếu database chưa có, Sequelize sẽ tạo khi dùng `sync()`
-//Local MySQL
-export const sequelize = new Sequelize(
-  process.env.MYSQL_DATABASE,
-  process.env.MYSQL_USER,
-  process.env.MYSQL_PASSWORD,
-  {
-    host: process.env.MYSQL_HOST,
-    dialect: "mysql",
-    logging: false, // tắt log SQL
-  }
-);
+// Local MySQL (commented out)
+// export const sequelize = new Sequelize(
+//   process.env.MYSQL_DATABASE,
+//   process.env.MYSQL_USER,
+//   process.env.MYSQL_PASSWORD,
+//   {
+//     host: process.env.MYSQL_HOST,
+//     dialect: "mysql",
+//     logging: false, // tắt log SQL
+//   }
+// );
 
 // Cloud MySQL (TiDB Cloud)
-// export const sequelize = new Sequelize(process.env.DATABASE_URL_CLOUD, {
-//   dialect: "mysql",
-//   dialectOptions: {
-//     ssl: {
-//       rejectUnauthorized: true,
-//     },
-//   },
-//   logging: false,
-// });
+export const sequelize = new Sequelize(process.env.DATABASE_URL_CLOUD, {
+  dialect: "mysql",
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: true,
+    },
+  },
+  logging: false,
+});
 
 export const connectDB = async () => {
   try {

@@ -232,10 +232,6 @@ const Checkout = () => {
     }
   };
 
-  const availableDistricts = formData.city
-    ? districts[formData.city] || []
-    : [];
-
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Header */}
@@ -361,11 +357,13 @@ const Checkout = () => {
                     <SelectValue placeholder="Chọn quận/huyện" />
                   </SelectTrigger>
                   <SelectContent>
-                    {availableDistricts.map((district) => (
-                      <SelectItem key={district} value={district}>
-                        {district}
-                      </SelectItem>
-                    ))}
+                    {(formData.city ? districts[formData.city] || [] : []).map(
+                      (district) => (
+                        <SelectItem key={district} value={district}>
+                          {district}
+                        </SelectItem>
+                      )
+                    )}
                   </SelectContent>
                 </Select>
               </div>
