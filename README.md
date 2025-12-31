@@ -87,20 +87,13 @@ View order history
 
 📊 Laptop Comparison Page
 
-Side-by-side comparison table
-
-Highlights differences between selected laptops
+![Home Page](./img/compare.png)
 
 🛒 Order
 
 ![Home Page](./img/order.png)
 ![Home Page](./img/orderdetail.png)
 
-💳 VNPay Payment Page
-
-Secure online payment flow
-
-Clear transaction status feedback
 
 📊 Admin Dashboard
 ![Home Page](./img/static.png)
