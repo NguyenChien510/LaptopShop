@@ -1,76 +1,39 @@
-💻 Laptop Store Website Project – PBL3
-🔍 System Overview
+💻 Laptop Store Website Project – PBL4
 
 This project is a Laptop Store e-commerce website designed to help users easily search, compare, and purchase laptops online.
 The system is inspired by real-world technology retail platforms and was developed as part of the PBL4 project, with a focus on clean backend architecture, detailed product comparison, secure authentication, and smooth online payment integration.
 
-🌟 Key Features
-🔐 User Authentication & Security
+Features
 
-User registration and login system
+🔍 Laptop Browsing & Comparison
 
-Google OAuth integration for fast and convenient sign-in
-
-Secure session handling with role-based access control
-
-💻 Laptop Browsing & Advanced Comparison
-
-Browse laptops by brand, price range, CPU, RAM, storage, and usage purpose
-
-Advanced laptop comparison feature:
+Search and filter laptops by brand, price, CPU, RAM, SSD, and usage purpose
 
 Compare multiple laptops side by side
 
-Display detailed technical specifications (CPU, GPU, RAM, SSD, screen, battery, weight, etc.)
-
-Helps users make informed purchasing decisions
-
 🛒 Shopping & Order Management
-
-Add laptops to shopping cart
-
-Update quantities or remove items
 
 Place orders with real-time price calculation
 
-💳 Online Payment Integration
+Track order status
 
-VNPay payment gateway integration
+💳 Online Payment
 
-Fully handle all transaction states:
+Integrated VNPay payment gateway
 
-Payment success
+Handle all payment states: success, failure, and cancellation
 
-Payment failure
+👥 Admin
 
-Payment cancellation
+Manage users and assign roles
 
-📧 Order Notification
-
-Automatic email confirmation after successful order placement
-
-Includes order details and payment status
-
-👥 User Roles & Permissions
-🛠️ Admin
-
-Manage user accounts (view, lock/unlock, assign roles)
-
-Manage laptop products (add, edit, delete, hide)
+Manage laptop products (add, update, hide, delete)
 
 Monitor orders and payment status
 
 View sales statistics and revenue reports
 
-🛍️ Customer (User)
 
-Browse and search laptops
-
-Compare laptop specifications
-
-Add products to cart and place orders
-
-View order history
 
 🖼️ UI / UX Screenshots
 🏠 Home Page – Laptop Listing
