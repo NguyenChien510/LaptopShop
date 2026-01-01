@@ -7,56 +7,56 @@ Features
 
 🔍 Laptop Browsing & Comparison
 
-Search and filter laptops by brand, price, CPU, RAM, SSD, and usage purpose
+- Search and filter laptops by brand, price, CPU, RAM, SSD, and usage purpose
 
-Compare multiple laptops side by side
+- Compare multiple laptops side by side
 
 🛒 Shopping & Order Management
 
-Place orders with real-time price calculation
+- Place orders with real-time price calculation
 
-Track order status
+- Track order status
 
 💳 Online Payment
 
-Integrated VNPay payment gateway
+- Integrated VNPay payment gateway
 
-Handle all payment states: success, failure, and cancellation
+- Handle all payment states: success, failure, and cancellation
 
 👥 Admin
 
-Manage users and assign roles
+- Manage users and assign roles
 
-Manage laptop products (add, update, hide, delete)
+- Manage laptop products (add, update, hide, delete)
 
-Monitor orders and payment status
+- Monitor orders and payment status
 
-View sales statistics and revenue reports
+- View sales statistics and revenue reports
 
 
 
-🖼️ UI / UX Screenshots
-🏠 Home Page – Laptop Listing
+🖼️ UI / UX Screenshots<br>
+🏠 Home Page <br>
 
 ![Home Page](./img/home1.png)
-Main homepage displaying featured laptops with category-based filtering.
+
 
 ![Home Page](./img/home2.png)
 Homepage showcasing laptop recommendations and promotional sections.
 
 ![Home Page](./img/home3.png)
-Responsive homepage layout optimized for smooth user browsing experience.
 
+<br>
 📄 All Products & Laptop Detail
 
+__All products page showing the full list of laptops with filtering and search options__
 ![Home Page](./img/products.png)
-All products page showing the full list of laptops with filtering and search options.
 
+__Laptop detail page displaying images, pricing, and basic product information__
 ![Home Page](./img/productdetail.png)
-Laptop detail page displaying images, pricing, and basic product information.
 
+__Detailed technical specifications combined with customer reviews__
 ![Home Page](./img/specandreview.png)
-Detailed technical specifications combined with customer reviews.
 
 📊 Laptop Comparison Page
 
