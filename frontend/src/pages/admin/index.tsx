@@ -470,31 +470,31 @@ const Admin = () => {
           onValueChange={setActiveTab}
           className="space-y-6"
         >
-          <TabsList className="grid w-full max-w-2xl grid-cols-4 p-1 bg-muted/50 rounded-lg">
+          <TabsList className="flex w-full overflow-x-auto pb-px border-b border-border bg-transparent h-auto p-0 rounded-none mb-8 gap-6 no-scrollbar">
             <TabsTrigger
               value="dashboard"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
+              className="relative flex items-center gap-2 px-1 py-4 !bg-transparent !shadow-none data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-none border-b-2 border-transparent data-[state=active]:border-primary font-medium"
             >
               <LayoutDashboard className="h-4 w-4" />
               Thống kê
             </TabsTrigger>
             <TabsTrigger
               value="products"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
+              className="relative flex items-center gap-2 px-1 py-4 !bg-transparent !shadow-none data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-none border-b-2 border-transparent data-[state=active]:border-primary font-medium"
             >
               <Package className="h-4 w-4" />
               Sản phẩm
             </TabsTrigger>
             <TabsTrigger
               value="coupons"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
+              className="relative flex items-center gap-2 px-1 py-4 !bg-transparent !shadow-none data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-none border-b-2 border-transparent data-[state=active]:border-primary font-medium"
             >
               <Ticket className="h-4 w-4" />
               Mã giảm giá
             </TabsTrigger>
             <TabsTrigger
               value="orders"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
+              className="relative flex items-center gap-2 px-1 py-4 !bg-transparent !shadow-none data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors cursor-pointer rounded-none border-b-2 border-transparent data-[state=active]:border-primary font-medium"
             >
               <ShoppingCart className="h-4 w-4" />
               Đơn hàng
@@ -843,54 +843,53 @@ const Admin = () => {
               </Link>
             </div>
 
-            <Card>
+            <Card className="border-border/50 shadow-sm overflow-hidden">
               <CardContent className="p-0">
                 <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[80px]">Ảnh</TableHead>
-                      <TableHead>Tên sản phẩm</TableHead>
-                      <TableHead className="text-right">Giá</TableHead>
-                      <TableHead className="text-right">Tồn kho</TableHead>
-                      <TableHead className="text-right">Đã bán</TableHead>
-                      <TableHead className="text-center">Đánh giá</TableHead>
-                      <TableHead className="w-[100px]">Thao tác</TableHead>
+                  <TableHeader className="bg-muted/30">
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="w-[80px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Ảnh</TableHead>
+                      <TableHead className="h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Tên sản phẩm</TableHead>
+                      <TableHead className="text-right h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Giá</TableHead>
+                      <TableHead className="text-right w-[100px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Kho</TableHead>
+                      <TableHead className="text-right w-[100px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Đã bán</TableHead>
+                      <TableHead className="text-center w-[120px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Đánh giá</TableHead>
+                      <TableHead className="w-[80px] text-right h-11 pr-4"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredProducts.map((product) => (
                       <TableRow key={product.id}>
-                        <TableCell>
-                          <img
-                            src={product.thumbnail}
-                            alt={product.name}
-                            className="w-12 h-12 rounded-lg object-cover"
-                          />
+                        <TableCell className="p-3">
+                          <div className="w-12 h-12 rounded-md border bg-muted/20 flex items-center justify-center overflow-hidden">
+                            <img
+                              src={product.thumbnail}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
                         </TableCell>
-                        <TableCell className="font-medium line-clamp-1">
-                          {product.name}
+                        <TableCell className="font-medium">
+                          <div className="line-clamp-2 leading-relaxed">
+                            {product.name}
+                          </div>
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right font-medium">
                           {formatPrice(product.price)}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right text-muted-foreground">
                           {product.stock}
                         </TableCell>
-                        <TableCell className="text-right">
+                        <TableCell className="text-right text-muted-foreground">
                           {product.sold}
                         </TableCell>
                         <TableCell className="text-center">
-                          <div className="flex items-center justify-center gap-1">
-                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            <span className="font-medium">
+                          <div className="flex items-center justify-center gap-1.5 bg-yellow-50 dark:bg-yellow-900/10 px-2 py-1 rounded-full w-fit mx-auto border border-yellow-100 dark:border-yellow-900/20">
+                            <Star className="h-3.5 w-3.5 fill-yellow-500 text-yellow-500" />
+                            <span className="text-xs font-semibold text-yellow-700 dark:text-yellow-500">
                               {product.rateCount > 0
-                                ? (product.sumRate / product.rateCount).toFixed(
-                                    1
-                                  )
-                                : "0"}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              ({product.rateCount})
+                                ? (product.sumRate / product.rateCount).toFixed(1)
+                                : "0.0"}
                             </span>
                           </div>
                         </TableCell>
@@ -970,43 +969,57 @@ const Admin = () => {
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredCoupons.map((coupon) => (
-                <Card key={coupon.id} className="relative overflow-hidden">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
+                <Card key={coupon.id} className="relative overflow-hidden border-border/50 shadow-sm transition-all hover:shadow-md hover:border-border">
+                  <div className={`absolute top-0 left-0 w-1 h-full ${coupon.status === "0" ? "bg-green-500" : "bg-muted-foreground"}`} />
+                  <CardHeader className="pb-3 pt-5 pl-5">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="space-y-3">
                         <Badge
-                          variant={
-                            coupon.status === "0" ? "default" : "secondary"
-                          }
+                          variant="outline"
                           className={
                             coupon.status === "0"
-                              ? "bg-green-500/10 text-green-600 border-0"
-                              : ""
+                              ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
+                              : "text-muted-foreground"
                           }
                         >
-                          {coupon.status === "0" ? "Hoạt động" : "Hết hạn"}
+                          {coupon.status === "0" ? "Đang hoạt động" : "Đã vô hiệu"}
                         </Badge>
-                        <Switch
-                          checked={coupon.status === "0"}
-                          onCheckedChange={() =>
-                            handleToggleCouponStatus(coupon)
-                          }
-                        />
+                        <div className="flex items-center gap-2">
+                          <code className="text-lg font-bold tracking-wider text-primary">
+                            {coupon.code}
+                          </code>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 cursor-pointer text-muted-foreground hover:text-foreground"
+                            onClick={() => copyCouponCode(coupon.code)}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                          </Button>
+                        </div>
                       </div>
+                      
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 cursor-pointer"
+                            className="-mt-1 -mr-1 h-8 w-8 cursor-pointer text-muted-foreground"
                           >
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
+                            onClick={() => handleToggleCouponStatus(coupon)}
+                            className="gap-2 cursor-pointer"
+                          >
+                            <Switch checked={coupon.status === "0"} className="scale-75 origin-left" />
+                            {coupon.status === "0" ? "Vô hiệu hóa" : "Kích hoạt"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
                             onClick={() => navigate(`/editcoupon/${coupon.id}`)}
-                            className="gap-2"
+                            className="gap-2 cursor-pointer"
                           >
                             <Pencil className="h-4 w-4" />
                             Chỉnh sửa
@@ -1019,7 +1032,7 @@ const Admin = () => {
                                 id: coupon.id,
                               })
                             }
-                            className="gap-2 text-destructive focus:text-destructive"
+                            className="gap-2 text-destructive focus:text-destructive cursor-pointer"
                           >
                             <Trash2 className="h-4 w-4" />
                             Xóa
@@ -1027,31 +1040,28 @@ const Admin = () => {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <code className="text-xl font-bold bg-muted px-3 py-1 rounded-lg">
-                        {coupon.code}
-                      </code>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 cursor-pointer"
-                        onClick={() => copyCouponCode(coupon.code)}
-                      >
-                        <span className="text-xs">Copy</span>
-                      </Button>
-                    </div>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="space-y-3 pl-5">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Giảm giá:</span>
-                      <span className="font-semibold text-primary">
+                      <span className="text-muted-foreground flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m2 7 4.42-4.42a2 2 0 0 1 2.83 0L22 15.28a2 2 0 0 1 0 2.83l-4 4a2 2 0 0 1-2.83 0L2.46 9.4A2 2 0 0 1 2 8V7Z"/><path d="M7.5 7.5h.01"/></svg>
+                        Phần trăm giảm:
+                      </span>
+                      <span className="font-semibold text-foreground">
                         {coupon.discount}%
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-sm pt-2 border-t">
-                      <span className="text-muted-foreground">Hết hạn:</span>
-                      <span>
-                        {new Date(coupon.expiresAt).toLocaleDateString("vi-VN")}
+                    <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50">
+                      <span className="text-muted-foreground flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Hạn sử dụng:
+                      </span>
+                      <span className="font-medium text-foreground">
+                        {new Date(coupon.expiresAt).toLocaleDateString("vi-VN", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric"
+                        })}
                       </span>
                     </div>
                   </CardContent>
@@ -1086,49 +1096,65 @@ const Admin = () => {
                     Không có đơn hàng nào
                   </div>
                 ) : (
-                  <div className="border rounded-lg overflow-hidden">
+                  <div className="border border-border/50 rounded-lg overflow-hidden shadow-sm">
                     <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>ID</TableHead>
-                          <TableHead>Khách Hàng</TableHead>
-                          <TableHead>Số Điện Thoại</TableHead>
-                          <TableHead>Tổng Tiền</TableHead>
-                          <TableHead>Trạng Thái</TableHead>
-                          <TableHead>Phương Thức</TableHead>
-                          <TableHead>Ngày</TableHead>
-                          <TableHead className="text-right">Thao Tác</TableHead>
+                      <TableHeader className="bg-muted/30">
+                        <TableRow className="hover:bg-transparent">
+                          <TableHead className="w-[100px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Mã ĐH</TableHead>
+                          <TableHead className="h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Khách Hàng</TableHead>
+                          <TableHead className="w-[140px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">SĐT</TableHead>
+                          <TableHead className="w-[140px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Tổng Tiền</TableHead>
+                          <TableHead className="w-[160px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Trạng Thái</TableHead>
+                          <TableHead className="w-[140px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Phương Thức</TableHead>
+                          <TableHead className="w-[120px] h-11 text-xs uppercase text-muted-foreground tracking-wider font-semibold">Ngày Đặt</TableHead>
+                          <TableHead className="w-[80px] text-right h-11 pr-4"></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {filteredOrders.map((order) => (
-                          <TableRow key={order.id}>
-                            <TableCell className="font-semibold">
-                              #{order.id}
+                          <TableRow key={order.id} className="group">
+                            <TableCell className="font-mono text-sm text-muted-foreground">
+                              #{order.id.toString().padStart(6, '0')}
                             </TableCell>
-                            <TableCell>{order.recipientName}</TableCell>
-                            <TableCell>{order.phone}</TableCell>
-                            <TableCell className="font-medium text-primary">
+                            <TableCell className="font-medium">
+                              {order.recipientName}
+                            </TableCell>
+                            <TableCell className="text-muted-foreground">
+                              {order.phone}
+                            </TableCell>
+                            <TableCell className="font-semibold text-foreground">
                               {formatPrice(order.total)}
                             </TableCell>
                             <TableCell>
                               <Badge
-                                variant={
+                                variant="outline"
+                                className={
                                   order.status === "Thanh toán thành công"
-                                    ? "default"
+                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800"
                                     : order.status === "Thanh toán thất bại"
-                                    ? "destructive"
-                                    : "secondary"
+                                    ? "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800"
+                                    : "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800"
                                 }
                               >
                                 {order.status}
                               </Badge>
                             </TableCell>
-                            <TableCell>{order.paymentMethod}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-1.5 text-muted-foreground">
+                                {order.paymentMethod === "COD" ? (
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                                ) : (
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+                                )}
+                                <span className="text-sm">{order.paymentMethod}</span>
+                              </div>
+                            </TableCell>
                             <TableCell className="text-sm text-muted-foreground">
-                              {new Date(order.createdAt).toLocaleDateString(
-                                "vi-VN"
-                              )}
+                              {new Date(order.createdAt).toLocaleDateString("vi-VN", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric"
+                              })}
                             </TableCell>
                             <TableCell className="text-right">
                               <Button
