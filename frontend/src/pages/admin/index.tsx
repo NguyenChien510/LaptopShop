@@ -91,9 +91,9 @@ const revenueData = [
 ];
 
 const categoryData = [
-  { name: "Laptop", value: 45, color: "hsl(var(--primary))" },
-  { name: "Desktop", value: 30, color: "hsl(var(--chart-2))" },
-  { name: "Gaming", value: 25, color: "hsl(var(--chart-3))" },
+  { name: "Laptop", value: 45, color: "#f43f5e" }, // Rose-500
+  { name: "Desktop", value: 30, color: "#8b5cf6" }, // Violet-500
+  { name: "Gaming", value: 25, color: "#0ea5e9" }, // Sky-500
 ];
 
 const topProducts = [
@@ -304,11 +304,11 @@ const Admin = () => {
 
   // Thêm màu cho usageData
   const colors = [
-    "hsl(var(--primary))",
-    "hsl(var(--chart-2))",
-    "hsl(var(--chart-3))",
-    "hsl(var(--chart-4))",
-    "hsl(var(--chart-5))",
+    "#f43f5e", // Rose-500
+    "#8b5cf6", // Violet-500
+    "#0ea5e9", // Sky-500
+    "#10b981", // Emerald-500
+    "#f59e0b", // Amber-500
   ];
   const usageDataWithColors = usageData.map((item: any, index: number) => ({
     ...item,
@@ -448,7 +448,7 @@ const Admin = () => {
               <span>Về trang chủ</span>
             </Link>
             <div className="h-6 w-px bg-border" />
-            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent drop-shadow-sm">
+            <h1 className="text-xl font-semibold text-slate-800 dark:text-slate-100">
               Admin Dashboard
             </h1>
           </div>
@@ -470,31 +470,31 @@ const Admin = () => {
           onValueChange={setActiveTab}
           className="space-y-6"
         >
-          <TabsList className="grid w-full max-w-2xl grid-cols-4 p-1.5 bg-slate-100/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl">
+          <TabsList className="grid w-full max-w-2xl grid-cols-4 p-1 bg-muted/50 rounded-lg">
             <TabsTrigger
               value="dashboard"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
             >
               <LayoutDashboard className="h-4 w-4" />
               Thống kê
             </TabsTrigger>
             <TabsTrigger
               value="products"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
             >
               <Package className="h-4 w-4" />
               Sản phẩm
             </TabsTrigger>
             <TabsTrigger
               value="coupons"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
             >
               <Ticket className="h-4 w-4" />
               Mã giảm giá
             </TabsTrigger>
             <TabsTrigger
               value="orders"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-white !data-[state=active]:text-slate-900 !data-[state=active]:shadow-sm transition-all cursor-pointer rounded-md font-medium text-muted-foreground"
             >
               <ShoppingCart className="h-4 w-4" />
               Đơn hàng
@@ -505,109 +505,116 @@ const Admin = () => {
           <TabsContent value="dashboard" className="space-y-6">
             {/* Stats Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="relative overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-                  <CardTitle className="text-sm font-medium text-blue-100">
+              <Card className="bg-card shadow-sm border">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
                     Tổng doanh thu
                   </CardTitle>
-                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                    <DollarSign className="h-4 w-4 text-white" />
+                  <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <DollarSign className="h-4 w-4 text-blue-500" />
                   </div>
                 </CardHeader>
-                <CardContent className="relative z-10">
-                  <div className="text-3xl font-extrabold tracking-tight">
+                <CardContent>
+                  <div className="text-2xl font-bold tracking-tight text-foreground">
                     {formatPrice(totalRevenue)}
                   </div>
                   {revenueChange !== 0 && (
-                    <p className="text-xs flex items-center mt-2 text-blue-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
+                    <p className="text-xs flex items-center mt-2 font-medium">
                       {revenueChange > 0 ? (
-                        <ArrowUpRight className="h-3 w-3 mr-1 text-green-300" />
+                        <span className="flex items-center text-green-600 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded-md mr-2">
+                          <ArrowUpRight className="h-3 w-3 mr-0.5" />
+                          +{revenueChange}%
+                        </span>
                       ) : (
-                        <ArrowDownRight className="h-3 w-3 mr-1 text-red-300" />
+                        <span className="flex items-center text-red-600 bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded-md mr-2">
+                          <ArrowDownRight className="h-3 w-3 mr-0.5" />
+                          {revenueChange}%
+                        </span>
                       )}
-                      {revenueChange > 0 ? "+" : ""}
-                      {revenueChange}% so với tháng trước
+                      <span className="text-muted-foreground">so với tháng trước</span>
                     </p>
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="relative overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-                  <CardTitle className="text-sm font-medium text-pink-100">
+              <Card className="bg-card shadow-sm border">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
                     Tổng đơn hàng
                   </CardTitle>
-                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                    <ShoppingCart className="h-4 w-4 text-white" />
+                  <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                    <ShoppingCart className="h-4 w-4 text-purple-500" />
                   </div>
                 </CardHeader>
-                <CardContent className="relative z-10">
-                  <div className="text-3xl font-extrabold tracking-tight">
+                <CardContent>
+                  <div className="text-2xl font-bold tracking-tight text-foreground">
                     {totalOrders.toLocaleString()}
                   </div>
                   {ordersChange !== 0 && (
-                    <p className="text-xs flex items-center mt-2 text-pink-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
+                    <p className="text-xs flex items-center mt-2 font-medium">
                       {ordersChange > 0 ? (
-                        <ArrowUpRight className="h-3 w-3 mr-1 text-green-300" />
+                        <span className="flex items-center text-green-600 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded-md mr-2">
+                          <ArrowUpRight className="h-3 w-3 mr-0.5" />
+                          +{ordersChange}%
+                        </span>
                       ) : (
-                        <ArrowDownRight className="h-3 w-3 mr-1 text-red-300" />
+                        <span className="flex items-center text-red-600 bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded-md mr-2">
+                          <ArrowDownRight className="h-3 w-3 mr-0.5" />
+                          {ordersChange}%
+                        </span>
                       )}
-                      {ordersChange > 0 ? "+" : ""}
-                      {ordersChange}% so với tháng trước
+                      <span className="text-muted-foreground">so với tháng trước</span>
                     </p>
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-                  <CardTitle className="text-sm font-medium text-orange-100">
+              <Card className="bg-card shadow-sm border">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
                     Đã bán
                   </CardTitle>
-                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                    <TrendingUp className="h-4 w-4 text-white" />
+                  <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+                    <TrendingUp className="h-4 w-4 text-orange-500" />
                   </div>
                 </CardHeader>
-                <CardContent className="relative z-10">
-                  <div className="text-3xl font-extrabold tracking-tight">
+                <CardContent>
+                  <div className="text-2xl font-bold tracking-tight text-foreground">
                     {totalSold.toLocaleString()}
                   </div>
                   {soldChange !== 0 && (
-                    <p className="text-xs flex items-center mt-2 text-orange-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
+                    <p className="text-xs flex items-center mt-2 font-medium">
                       {soldChange > 0 ? (
-                        <ArrowUpRight className="h-3 w-3 mr-1 text-green-300" />
+                        <span className="flex items-center text-green-600 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded-md mr-2">
+                          <ArrowUpRight className="h-3 w-3 mr-0.5" />
+                          +{soldChange}%
+                        </span>
                       ) : (
-                        <ArrowDownRight className="h-3 w-3 mr-1 text-red-200" />
+                        <span className="flex items-center text-red-600 bg-red-50 dark:bg-red-900/20 px-1.5 py-0.5 rounded-md mr-2">
+                          <ArrowDownRight className="h-3 w-3 mr-0.5" />
+                          {soldChange}%
+                        </span>
                       )}
-                      {soldChange > 0 ? "+" : ""}
-                      {soldChange}% so với tháng trước
+                      <span className="text-muted-foreground">so với tháng trước</span>
                     </p>
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="relative overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
-                  <CardTitle className="text-sm font-medium text-teal-100">
+              <Card className="bg-card shadow-sm border">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
                     Sản phẩm
                   </CardTitle>
-                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
-                    <Package className="h-4 w-4 text-white" />
+                  <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+                    <Package className="h-4 w-4 text-emerald-500" />
                   </div>
                 </CardHeader>
-                <CardContent className="relative z-10">
-                  <div className="text-3xl font-extrabold tracking-tight">
+                <CardContent>
+                  <div className="text-2xl font-bold tracking-tight text-foreground">
                     {totalProducts}
                   </div>
-                  <p className="text-xs mt-2 text-teal-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
+                  <p className="text-xs text-muted-foreground mt-2">
                     Trong kho
                   </p>
                 </CardContent>
@@ -635,13 +642,13 @@ const Admin = () => {
                           >
                             <stop
                               offset="5%"
-                              stopColor="hsl(var(--primary))"
-                              stopOpacity={0.3}
+                              stopColor="#6366f1" // indigo-500
+                              stopOpacity={0.8}
                             />
                             <stop
                               offset="95%"
-                              stopColor="hsl(var(--primary))"
-                              stopOpacity={0}
+                              stopColor="#6366f1"
+                              stopOpacity={0.1}
                             />
                           </linearGradient>
                         </defs>
@@ -676,8 +683,8 @@ const Admin = () => {
                         <Area
                           type="monotone"
                           dataKey="revenue"
-                          stroke="hsl(var(--primary))"
-                          strokeWidth={2}
+                          stroke="#6366f1"
+                          strokeWidth={3}
                           fill="url(#colorRevenue)"
                         />
                       </AreaChart>
@@ -806,7 +813,7 @@ const Admin = () => {
                       />
                       <Bar
                         dataKey="sales"
-                        fill="hsl(var(--primary))"
+                        fill="#f43f5e"
                         radius={[0, 4, 4, 0]}
                       />
                     </BarChart>
