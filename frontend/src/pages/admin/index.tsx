@@ -448,7 +448,7 @@ const Admin = () => {
               <span>Về trang chủ</span>
             </Link>
             <div className="h-6 w-px bg-border" />
-            <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent drop-shadow-sm">
               Admin Dashboard
             </h1>
           </div>
@@ -470,31 +470,31 @@ const Admin = () => {
           onValueChange={setActiveTab}
           className="space-y-6"
         >
-          <TabsList className="grid w-full max-w-2xl grid-cols-4 p-1 bg-muted/50">
+          <TabsList className="grid w-full max-w-2xl grid-cols-4 p-1.5 bg-slate-100/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-xl">
             <TabsTrigger
               value="dashboard"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-cyan-500 !data-[state=active]:text-white cursor-pointer rounded-md"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
             >
               <LayoutDashboard className="h-4 w-4" />
               Thống kê
             </TabsTrigger>
             <TabsTrigger
               value="products"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-cyan-500 !data-[state=active]:text-white cursor-pointer rounded-md"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
             >
               <Package className="h-4 w-4" />
               Sản phẩm
             </TabsTrigger>
             <TabsTrigger
               value="coupons"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-cyan-500 !data-[state=active]:text-white cursor-pointer rounded-md"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
             >
               <Ticket className="h-4 w-4" />
               Mã giảm giá
             </TabsTrigger>
             <TabsTrigger
               value="orders"
-              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-cyan-500 !data-[state=active]:text-white cursor-pointer rounded-md"
+              className="flex items-center gap-2 px-4 py-2 !data-[state=active]:bg-gradient-to-r !data-[state=active]:from-indigo-500 !data-[state=active]:via-purple-500 !data-[state=active]:to-pink-500 !data-[state=active]:text-white !data-[state=active]:shadow-md transition-all cursor-pointer rounded-lg font-medium"
             >
               <ShoppingCart className="h-4 w-4" />
               Đơn hàng
@@ -505,28 +505,27 @@ const Admin = () => {
           <TabsContent value="dashboard" className="space-y-6">
             {/* Stats Cards */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -mr-16 -mt-16" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                  <CardTitle className="text-sm font-medium text-blue-100">
                     Tổng doanh thu
                   </CardTitle>
-                  <DollarSign className="h-4 w-4 text-primary" />
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <DollarSign className="h-4 w-4 text-white" />
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
+                <CardContent className="relative z-10">
+                  <div className="text-3xl font-extrabold tracking-tight">
                     {formatPrice(totalRevenue)}
                   </div>
                   {revenueChange !== 0 && (
-                    <p
-                      className={`text-xs flex items-center mt-1 ${
-                        revenueChange > 0 ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
+                    <p className="text-xs flex items-center mt-2 text-blue-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
                       {revenueChange > 0 ? (
-                        <ArrowUpRight className="h-3 w-3 mr-1" />
+                        <ArrowUpRight className="h-3 w-3 mr-1 text-green-300" />
                       ) : (
-                        <ArrowDownRight className="h-3 w-3 mr-1" />
+                        <ArrowDownRight className="h-3 w-3 mr-1 text-red-300" />
                       )}
                       {revenueChange > 0 ? "+" : ""}
                       {revenueChange}% so với tháng trước
@@ -535,28 +534,27 @@ const Admin = () => {
                 </CardContent>
               </Card>
 
-              <Card className="relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-chart-2/10 rounded-full -mr-16 -mt-16" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                  <CardTitle className="text-sm font-medium text-pink-100">
                     Tổng đơn hàng
                   </CardTitle>
-                  <ShoppingCart className="h-4 w-4 text-chart-2" />
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <ShoppingCart className="h-4 w-4 text-white" />
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
+                <CardContent className="relative z-10">
+                  <div className="text-3xl font-extrabold tracking-tight">
                     {totalOrders.toLocaleString()}
                   </div>
                   {ordersChange !== 0 && (
-                    <p
-                      className={`text-xs flex items-center mt-1 ${
-                        ordersChange > 0 ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
+                    <p className="text-xs flex items-center mt-2 text-pink-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
                       {ordersChange > 0 ? (
-                        <ArrowUpRight className="h-3 w-3 mr-1" />
+                        <ArrowUpRight className="h-3 w-3 mr-1 text-green-300" />
                       ) : (
-                        <ArrowDownRight className="h-3 w-3 mr-1" />
+                        <ArrowDownRight className="h-3 w-3 mr-1 text-red-300" />
                       )}
                       {ordersChange > 0 ? "+" : ""}
                       {ordersChange}% so với tháng trước
@@ -565,28 +563,27 @@ const Admin = () => {
                 </CardContent>
               </Card>
 
-              <Card className="relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-chart-3/10 rounded-full -mr-16 -mt-16" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                  <CardTitle className="text-sm font-medium text-orange-100">
                     Đã bán
                   </CardTitle>
-                  <TrendingUp className="h-4 w-4 text-chart-3" />
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <TrendingUp className="h-4 w-4 text-white" />
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
+                <CardContent className="relative z-10">
+                  <div className="text-3xl font-extrabold tracking-tight">
                     {totalSold.toLocaleString()}
                   </div>
                   {soldChange !== 0 && (
-                    <p
-                      className={`text-xs flex items-center mt-1 ${
-                        soldChange > 0 ? "text-green-600" : "text-red-600"
-                      }`}
-                    >
+                    <p className="text-xs flex items-center mt-2 text-orange-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
                       {soldChange > 0 ? (
-                        <ArrowUpRight className="h-3 w-3 mr-1" />
+                        <ArrowUpRight className="h-3 w-3 mr-1 text-green-300" />
                       ) : (
-                        <ArrowDownRight className="h-3 w-3 mr-1" />
+                        <ArrowDownRight className="h-3 w-3 mr-1 text-red-200" />
                       )}
                       {soldChange > 0 ? "+" : ""}
                       {soldChange}% so với tháng trước
@@ -595,17 +592,22 @@ const Admin = () => {
                 </CardContent>
               </Card>
 
-              <Card className="relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-chart-4/10 rounded-full -mr-16 -mt-16" />
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
+              <Card className="relative overflow-hidden bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-lg border-0 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-8 -mt-8 group-hover:scale-125 transition-transform duration-500" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl -ml-8 -mb-8" />
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+                  <CardTitle className="text-sm font-medium text-teal-100">
                     Sản phẩm
                   </CardTitle>
-                  <Package className="h-4 w-4 text-chart-4" />
+                  <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <Package className="h-4 w-4 text-white" />
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{totalProducts}</div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                <CardContent className="relative z-10">
+                  <div className="text-3xl font-extrabold tracking-tight">
+                    {totalProducts}
+                  </div>
+                  <p className="text-xs mt-2 text-teal-100 font-medium bg-white/10 w-fit px-2 py-1 rounded-full">
                     Trong kho
                   </p>
                 </CardContent>
